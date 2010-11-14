@@ -13,11 +13,11 @@ import java.util.Queue;
 public class ProjectBoxImpl implements ProjectBox {
 
 	Queue<Project> projectQueue;
-	ManagerSpecializtion managerSpecializtion;
+	ManagerSpecialization managerSpecialization;
 
-	public ProjectBoxImpl(ManagerSpecializtion managerSpecializtion) {
+	public ProjectBoxImpl(ManagerSpecialization managerSpecialization) {
 		projectQueue = new LinkedList<Project>();
-		this.managerSpecializtion = managerSpecializtion;
+		this.managerSpecialization = managerSpecialization;
 	}
 
 	/*
@@ -29,11 +29,11 @@ public class ProjectBoxImpl implements ProjectBox {
 	public synchronized void addProject(Project project)
 			throws RuntimeException {
 		if (!project.getNextManagerSpecializtion().equals(
-				this.managerSpecializtion)) {
+				this.managerSpecialization)) {
 			throw new RuntimeException("the next manager in project "
 					+ project.getName()
 					+ " did not match the one in ProjectBox "
-					+ this.managerSpecializtion.specialization);
+					+ this.managerSpecialization.specialization);
 		}
 		projectQueue.add(project);
 		this.notify(); // no reason to wake up everybody to handle 1 project.
@@ -74,7 +74,7 @@ public class ProjectBoxImpl implements ProjectBox {
 	 * @see passiveobjects.ProjectBox#getManagerSpecializtion(passiveobjects.Project)
 	 */
 	@Override
-	public ManagerSpecializtion getManagerSpecializtion() {
+	public ManagerSpecialization getManagerSpecializtion() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -25,7 +25,7 @@ public interface Project {
 	
 	public long getTotalHours();
 	
-	public ManagerSpecializtion getNextManagerSpecializtion();
+	public ManagerSpecialization getNextManagerSpecializtion();
 	
 	public void addTask(Task task);
 	

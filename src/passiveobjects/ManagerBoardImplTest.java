@@ -43,21 +43,21 @@ public class ManagerBoardImplTest {
 
 	/**
 	 * Test method for
-	 * {@link passiveobjects.ManagerBoardImpl#getProjectBox(passiveobjects.ManagerSpecializtion)}
+	 * {@link passiveobjects.ManagerBoardImpl#getProjectBox(passiveobjects.ManagerSpecialization)}
 	 * .
 	 */
 	@Test
 	public void testGetProjectBox() { 
 		String randStr = UUID.randomUUID().toString();
-		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr);
-		ProjectBoxImpl projectBoxImpl = new ProjectBoxImpl(managerSpecializtion);
-		Map<ManagerSpecializtion, ProjectBoxImpl> map = new ConcurrentHashMap<ManagerSpecializtion, ProjectBoxImpl>();
-		map.put(managerSpecializtion, projectBoxImpl);
-		((ManagerBoardImpl) managerBoard).createProjectsMap(map);
+		ProjectBoxImpl projectBoxImpl = new ProjectBoxImpl(managerSpecialization);
+		Map<ManagerSpecialization, ProjectBox> map = new ConcurrentHashMap<ManagerSpecialization, ProjectBox>();
+		map.put(managerSpecialization, projectBoxImpl);
+		((ManagerBoardImpl) this.managerBoard).createProjectsMap(map);
 		assertEquals(projectBoxImpl, managerBoard
-				.getProjectBox(managerSpecializtion));
-		ManagerSpecializtion falseManagerSpecializtion = new ManagerSpecializtion(
+				.getProjectBox(managerSpecialization));
+		ManagerSpecialization falseManagerSpecializtion = new ManagerSpecialization(
 				randStr + "33");
 		assertEquals(null, managerBoard
 				.getProjectBox(falseManagerSpecializtion));

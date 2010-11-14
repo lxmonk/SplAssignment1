@@ -27,9 +27,9 @@ public class ProjectBoxImplTest {
 	@Before
 	public void setUp() throws Exception {
 		String randStr = UUID.randomUUID().toString();
-		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr);
-		this.projectBox = new ProjectBoxImpl(managerSpecializtion);
+		this.projectBox = new ProjectBoxImpl(managerSpecialization);
 	}
 
 	/**
@@ -47,10 +47,10 @@ public class ProjectBoxImplTest {
 	public void testAddProject() {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
-		ManagerSpecializtion managerSpecializtion = projectBox
+		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecializtion, new WorkerSpecialty(
+		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
 				randStr), (int) Math.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);
@@ -58,7 +58,7 @@ public class ProjectBoxImplTest {
 		projectBox.addProject(project);
 		assertEquals(project, projectBox.getProject());
 
-		ManagerSpecializtion falseManagerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization falseManagerSpecializtion = new ManagerSpecialization(
 				randStr2 + "33");
 		Task wrongTask = new TaskImpl(falseManagerSpecializtion,
 				new WorkerSpecialty(randStr), (int) Math
@@ -82,10 +82,10 @@ public class ProjectBoxImplTest {
 	public void testGetProject() {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
-		ManagerSpecializtion managerSpecializtion = projectBox
+		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecializtion, new WorkerSpecialty(
+		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
 				randStr), (int) Math.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);
@@ -103,10 +103,10 @@ public class ProjectBoxImplTest {
 	public void testRemoveProject() {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
-		ManagerSpecializtion managerSpecializtion = projectBox
+		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecializtion, new WorkerSpecialty(
+		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
 				randStr), (int) Math.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);

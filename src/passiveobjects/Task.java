@@ -21,7 +21,7 @@ public interface Task {
 	 * 
 	 * @return the relevant ManagerSpecializtion
 	 */
-	public ManagerSpecializtion getManagerSpecializtion();
+	public ManagerSpecialization getManagerSpecializtion();
 
 	/**
 	 * return the specialty needed by the worker to complete this task.

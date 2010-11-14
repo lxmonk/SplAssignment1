@@ -4,33 +4,47 @@
 package passiveobjects;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author lxmonk
- *
+ * 
  */
 public class ManagerBoardImpl implements ManagerBoard {
 
-	/* (non-Javadoc)
+	Map<ManagerSpecialization, ProjectBox> map;
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see passiveObjects.ManagerBoard#getPendingProjects()
 	 */
 	@Override
-	public Map<ManagerSpecializtion, ProjectBoxImpl> getPendingProjects() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<ManagerSpecialization, ProjectBox> getPendingProjects() {
+		return this.map;
 	}
 
-	/* (non-Javadoc)
-	 * @see passiveObjects.ManagerBoard#getProjectBox(passiveObjects.ManagerSpecializtion)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * passiveObjects.ManagerBoard#getProjectBox(passiveObjects.ManagerSpecializtion
+	 * )
 	 */
 	@Override
-	public ProjectBoxImpl getProjectBox(ManagerSpecializtion specializtion) {
-		// TODO Auto-generated method stub
-		return null;
+	public ProjectBoxImpl getProjectBox(ManagerSpecialization specialization) {
+		return (ProjectBoxImpl) this.map.get(specialization);
 	}
-	
-	public void createProjectsMap(Map<ManagerSpecializtion, ProjectBoxImpl> map){
-		//TODO implement!
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see passiveobjects.ManagerBoard#createProjectsMap(java.util.Map)
+	 */
+	@Override
+	public void createProjectsMap(Map<ManagerSpecialization, ProjectBox> initMap) {
+		this.map = new ConcurrentHashMap<ManagerSpecialization, ProjectBox>(initMap);
+
 	}
 
 }

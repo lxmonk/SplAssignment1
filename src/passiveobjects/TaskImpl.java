@@ -17,7 +17,7 @@ import acitiveobjects.Worker;
  */
 public class TaskImpl implements Task {
 
-	final ManagerSpecializtion managerSpecialization;
+	final ManagerSpecialization managerSpecialization;
 	final WorkerSpecialty workerSpecialty;
 	Manager manager;
 	final int size;
@@ -31,7 +31,7 @@ public class TaskImpl implements Task {
 	 * a new task constructor
 	 * 
 	 * @param aManagerSpecialization
-	 *            the {@link ManagerSpecializtion} needed to perform this task.
+	 *            the {@link ManagerSpecialization} needed to perform this task.
 	 * @param aWorkerSpecialty
 	 *            the WorkerSpecialty needed for this task
 	 * @param aSize
@@ -39,7 +39,7 @@ public class TaskImpl implements Task {
 	 * @param resourcesList
 	 *            the Resources needed for this task
 	 */
-	public TaskImpl(ManagerSpecializtion aManagerSpecialization,
+	public TaskImpl(ManagerSpecialization aManagerSpecialization,
 			WorkerSpecialty aWorkerSpecialty, int aSize,
 			List<Resource> resourcesList) {
 		this.workerSpecialty = aWorkerSpecialty;
@@ -87,7 +87,7 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public ManagerSpecializtion getManagerSpecializtion() {
+	public ManagerSpecialization getManagerSpecializtion() {
 		return this.manager.getSpecializtion();
 	}
 

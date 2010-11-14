@@ -20,8 +20,13 @@ public class ProjectImpl implements Project {
 	Manager lastManager; //should there be also current manager?
 	long totalHours;
 	
-	public ProjectImpl(String name, List<Task> initialTaskList){
-		this.name = name;
+	/**
+	 * constructor
+	 * @param aName {@link Project} name.
+	 * @param initialTaskList the initial tasks
+	 */
+	public ProjectImpl(String aName, List<Task> initialTaskList){
+		this.name = aName;
 		this.tasks = new LinkedList<Task>();
 		for (Task task : initialTaskList){
 			this.tasks.add(task);
@@ -89,7 +94,7 @@ public class ProjectImpl implements Project {
 	 * @see passiveObjects.Project#getNextManagerSpecializtion()
 	 */
 	@Override
-	public ManagerSpecializtion getNextManagerSpecializtion() {
+	public ManagerSpecialization getNextManagerSpecializtion() {
 		// TODO Auto-generated method stub
 		return null;
 	}

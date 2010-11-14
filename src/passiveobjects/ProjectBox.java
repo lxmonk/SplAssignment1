@@ -38,12 +38,12 @@ public interface ProjectBox {
 	public void removeProject(Project project) throws RuntimeException;
 
 	/**
-	 * returns the {@link ManagerSpecializtion} corresponding to this
+	 * returns the {@link ManagerSpecialization} corresponding to this
 	 * {@link ProjectBox}.
 	 * 
-	 * @return the {@link ManagerSpecializtion} corresponding to this
+	 * @return the {@link ManagerSpecialization} corresponding to this
 	 *         {@link ProjectBox}.
 	 */
-	public ManagerSpecializtion getManagerSpecializtion();
+	public ManagerSpecialization getManagerSpecializtion();
 
 }

@@ -48,11 +48,11 @@ public class WorkingBoardImplTest {
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
 		WorkerSpecialty falseWorkerSpecialty = new WorkerSpecialty(randStr
 				+ "2");
-		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr2);
 		int size = (int) Math.round(Math.random() * 100) + 1;
 		List<Resource> resources = null;
-		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+		Task task = new TaskImpl(managerSpecialization, workerSpecialty, size,
 				resources);
 		workingBoard.postTask(task);
 		assertEquals(task, workingBoard.getTaskBySpecialty(workerSpecialty));
@@ -70,15 +70,15 @@ public class WorkingBoardImplTest {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
-		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr2);
 		int size = (int) Math.round(Math.random() * 100) + 1;
 		List<Resource> resources = null;
-		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+		Task task = new TaskImpl(managerSpecialization, workerSpecialty, size,
 				resources);
 		workingBoard.postTask(task);
 		assertEquals(task, workingBoard.findTask(task));
-		Task falseTask = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+		Task falseTask = new TaskImpl(managerSpecialization, workerSpecialty, size,
 				resources);
 		assertEquals(null, workingBoard.findTask(falseTask));
 	}
@@ -92,11 +92,11 @@ public class WorkingBoardImplTest {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
-		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr2);
 		int size = (int) Math.round(Math.random() * 100) + 1;
 		List<Resource> resources = null;
-		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+		Task task = new TaskImpl(managerSpecialization, workerSpecialty, size,
 				resources);
 		workingBoard.postTask(task);
 		assertEquals(task, workingBoard.findTask(task));
