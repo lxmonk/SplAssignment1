@@ -9,4 +9,10 @@ package passiveobjects;
  */
 public class WorkerSpecialty {
 
+	String specialty; 
+	
+	public WorkerSpecialty(String aSpecialty) {
+		this.specialty = aSpecialty;
+	}
+
 }

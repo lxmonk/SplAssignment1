@@ -8,5 +8,10 @@ package acitiveobjects;
  *
  */
 public class Worker {
+	String name;
+	
+	public String getName(){
+		return name;
+	}
 
 }

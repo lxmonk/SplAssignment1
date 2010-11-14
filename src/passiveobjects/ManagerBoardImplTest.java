@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +38,7 @@ public class ManagerBoardImplTest {
 	 */
 	@Test
 	public void testGetPendingProjects() {
-		// simple Queries are never tested.
+		// simple Queries are not tested.
 	}
 
 	/**
@@ -44,18 +47,20 @@ public class ManagerBoardImplTest {
 	 * .
 	 */
 	@Test
-	public void testGetProjectBox() {// TODO: finish Task creation.
-		String projectName = "pName", manSpec = "specialization";
+	public void testGetProjectBox() { 
+		String randStr = UUID.randomUUID().toString();
 		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
-				manSpec);
-		LinkedList<Task> taskList = new LinkedList<Task>();
-		taskList.add(new TaskImpl());
-		Project project = new ProjectImpl(projectName, taskList);
-		ProjectBox projectBox = new ProjectBox(managerSpecializtion);
-		projectBox.addProject(project);
-		Map<ManagerSpecializtion, ProjectBox> map = new HashMap<ManagerSpecializtion, ProjectBox>();
-		map.put(managerSpecializtion, projectBox);
+				randStr);
+		ProjectBoxImpl projectBoxImpl = new ProjectBoxImpl(managerSpecializtion);
+		Map<ManagerSpecializtion, ProjectBoxImpl> map = new ConcurrentHashMap<ManagerSpecializtion, ProjectBoxImpl>();
+		map.put(managerSpecializtion, projectBoxImpl);
 		((ManagerBoardImpl) managerBoard).createProjectsMap(map);
-		assertEquals(projectBox, managerBoard.getProjectBox(managerSpecializtion));
+		assertEquals(projectBoxImpl, managerBoard
+				.getProjectBox(managerSpecializtion));
+		ManagerSpecializtion falseManagerSpecializtion = new ManagerSpecializtion(
+				randStr + "33");
+		assertEquals(null, managerBoard
+				.getProjectBox(falseManagerSpecializtion));
+
 	}
 }

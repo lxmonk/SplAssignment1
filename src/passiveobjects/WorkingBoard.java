@@ -27,8 +27,13 @@ public interface WorkingBoard {
 	 */
 	public void removeTask(Task task);
 	
+	/**
+	 * finds the stated Task on the WorkingBoard, and returns it
+	 * @pre none.
+	 * @post none.
+	 * @param task The task we want to find
+	 * @return The task, if found, or null if not found.
+	 */
+	public Task findTask(Task task);
 	
-	
-	
-
 }

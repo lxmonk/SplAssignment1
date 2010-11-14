@@ -3,7 +3,10 @@
  */
 package passiveobjects;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
@@ -14,75 +17,124 @@ import acitiveobjects.Worker;
  */
 public class TaskImpl implements Task {
 
-	ManagerSpecializtion managerSpecialization;
-	WorkerSpecialty workerSpecialty;
+	final ManagerSpecializtion managerSpecialization;
+	final WorkerSpecialty workerSpecialty;
 	Manager manager;
-	long size;
-	List<Resource> resources;
+	final int size;
+	volatile int hoursDone;
+	volatile int hoursNeeded;
+	final List<Resource> resources;
 	List<Worker> workers;
-	
-	//FIXME stub. implementation by Tom..
-	public TaskImpl(){}
-	
+	boolean complete;
+
+	/**
+	 * a new task constructor
+	 * 
+	 * @param aManagerSpecialization
+	 *            the {@link ManagerSpecializtion} needed to perform this task.
+	 * @param aWorkerSpecialty
+	 *            the WorkerSpecialty needed for this task
+	 * @param aSize
+	 *            the size in work hours of this task
+	 * @param resourcesList
+	 *            the Resources needed for this task
+	 */
+	public TaskImpl(ManagerSpecializtion aManagerSpecialization,
+			WorkerSpecialty aWorkerSpecialty, int aSize,
+			List<Resource> resourcesList) {
+		this.workerSpecialty = aWorkerSpecialty;
+		this.managerSpecialization = aManagerSpecialization;
+		this.size = aSize;
+		this.hoursNeeded = aSize;
+		this.hoursDone = 0;
+		this.resources = resourcesList;
+		this.workers = new CopyOnWriteArrayList<Worker>();
+		this.complete = false;
+	}
+
 	@Override
 	public WorkerSpecialty getWorkerSpecialty() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.workerSpecialty;
 	}
+
 	@Override
 	public List<String> getAllWorkerNames() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> workerNames = new CopyOnWriteArrayList<String>();
+		for (Worker worker : this.workers) {
+			workerNames.add(worker.getName());
+		}
+		return workerNames;
 	}
+
 	@Override
 	public int getHoursDone() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.hoursDone;
 	}
+
 	@Override
 	public int getHoursStillNeeded() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.size - this.hoursDone;
 	}
+
 	@Override
 	public Manager getManager() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.manager;
 	}
+
 	@Override
 	public String getManagerName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.manager.getName();
 	}
+
 	@Override
 	public ManagerSpecializtion getManagerSpecializtion() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.manager.getSpecializtion();
 	}
+
 	@Override
 	public List<Resource> getNeededResources() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.resources;
 	}
+
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.size;
 	}
+
 	@Override
 	public List<Worker> getWorkers() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.workers;
 	}
+
 	@Override
 	public boolean isComplete() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.complete;
 	}
+
 	@Override
 	public void taskIsDone() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	@Override
+	public void addWorker(Worker worker) {
+		this.workers.add(worker);
+		// TODO: do something with hours
+	}
+
+	@Override
+	public synchronized void incrementHoursDone() {
+		this.hoursDone++;
+	}
+
+	@Override
+	public void setManager(Manager aManager) {
+		this.manager = aManager;
+	}
+
+	@Override
+	public synchronized void decreaseHoursStillNeeded(int hours) {
+		this.hoursNeeded -= hours;
+	}
 }

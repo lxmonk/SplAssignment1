@@ -15,7 +15,7 @@ public class ManagerBoardImpl implements ManagerBoard {
 	 * @see passiveObjects.ManagerBoard#getPendingProjects()
 	 */
 	@Override
-	public Map<ManagerSpecializtion, ProjectBox> getPendingProjects() {
+	public Map<ManagerSpecializtion, ProjectBoxImpl> getPendingProjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -24,12 +24,12 @@ public class ManagerBoardImpl implements ManagerBoard {
 	 * @see passiveObjects.ManagerBoard#getProjectBox(passiveObjects.ManagerSpecializtion)
 	 */
 	@Override
-	public ProjectBox getProjectBox(ManagerSpecializtion specializtion) {
+	public ProjectBoxImpl getProjectBox(ManagerSpecializtion specializtion) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
-	public void createProjectsMap(Map<ManagerSpecializtion, ProjectBox> map){
+	public void createProjectsMap(Map<ManagerSpecializtion, ProjectBoxImpl> map){
 		//TODO implement!
 	}
 

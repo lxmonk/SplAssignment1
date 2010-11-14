@@ -1,48 +1,49 @@
-/**
- * 
- */
 package passiveobjects;
 
-import java.util.LinkedList;
-import java.util.Queue;
+public interface ProjectBox {
 
-/**
- * @author lxmonk
- * 
- */
-public class ProjectBox {
+	/**
+	 * return a project from the box. if the box is empty, the manager will
+	 * wait.
+	 * 
+	 * @pre none
+	 * @post none
+	 * 
+	 * @return a project from the box.
+	 */
+	public Project getProject();
 
-	Queue<Project> projectQueue;
-	ManagerSpecializtion managerSpecializtion;
+	/**
+	 * add a project to the {@link ProjectBox}.
+	 * 
+	 * @pre project.getNextManagerSpecializtion() == this.ManagerSpecializtion
+	 * @post the {@link ProjectBox} now contains project.
+	 * @param project
+	 *            the {@link Project} to be added.
+	 * @throws RuntimeException
+	 *             in case the project should not be added to this
+	 *             {@link ProjectBox}.
+	 */
+	public void addProject(Project project) throws RuntimeException;
 
-	public ProjectBox(ManagerSpecializtion managerSpecializtion) {
-		projectQueue = new LinkedList<Project>();
-		this.managerSpecializtion = managerSpecializtion;
-	}
+	/**
+	 * remove a project from the box, if it's in the box.
+	 * 
+	 * @pre the {@link ProjectBox} contains project.
+	 * @post the {@link ProjectBox} no longer contains project.
+	 * @param project
+	 * @throws RuntimeException
+	 *             in case the {@link ProjectBox} does NOT contain the project.
+	 */
+	public void removeProject(Project project) throws RuntimeException;
 
-	public synchronized Project getProject() {
-		while (projectQueue.isEmpty()) {
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return projectQueue.poll();
-	}
-
-	public synchronized void addProject(Project project)
-			throws RuntimeException {
-		if (!project.getNextManagerSpecializtion().equals(
-				this.managerSpecializtion)) {
-			throw new RuntimeException("the next manager in project "
-					+ project.getName()
-					+ " did not match the one in ProjectBox "
-					+ this.managerSpecializtion.specialization);
-		}
-		projectQueue.add(project);
-		this.notify(); // no reason to wake up everybody to handle 1 project.
-	}
+	/**
+	 * returns the {@link ManagerSpecializtion} corresponding to this
+	 * {@link ProjectBox}.
+	 * 
+	 * @return the {@link ManagerSpecializtion} corresponding to this
+	 *         {@link ProjectBox}.
+	 */
+	public ManagerSpecializtion getManagerSpecializtion();
 
 }

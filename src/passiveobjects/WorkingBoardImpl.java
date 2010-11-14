@@ -36,4 +36,10 @@ public class WorkingBoardImpl implements WorkingBoard {
 
 	}
 
+	@Override
+	public Task findTask(Task task) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

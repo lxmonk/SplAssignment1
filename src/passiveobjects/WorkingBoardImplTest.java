@@ -5,9 +5,14 @@ package passiveobjects;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import acitiveobjects.Manager;
 
 /**
  * @author lxmonk
@@ -33,34 +38,70 @@ public class WorkingBoardImplTest {
 
 	/**
 	 * Test method for
-	 * {@link passiveobjects.WorkingBoardImpl#getTaskBySpecialty(passiveobjects.WorkerSpecialty)}
+	 * {@link passiveObjects.WorkingBoardImpl#getTaskBySpecialty(passiveObjects.WorkerSpecialty)}
 	 * .
 	 */
 	@Test
 	public void testGetTaskBySpecialty() {
-		// Task task = new TaskImpl();
-		// workingBoard.postTask(task);
-		// assertEquals(task,
-		// workingBoard.getTaskBySpecialty(task.GetSpecialty))
+		String randStr = UUID.randomUUID().toString();
+		String randStr2 = UUID.randomUUID().toString();
+		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
+		WorkerSpecialty falseWorkerSpecialty = new WorkerSpecialty(randStr
+				+ "2");
+		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+				randStr2);
+		int size = (int) Math.round(Math.random() * 100) + 1;
+		List<Resource> resources = null;
+		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+				resources);
+		workingBoard.postTask(task);
+		assertEquals(task, workingBoard.getTaskBySpecialty(workerSpecialty));
+		assertEquals(null, workingBoard
+				.getTaskBySpecialty(falseWorkerSpecialty));
 
 	}
 
 	/**
 	 * Test method for
-	 * {@link passiveobjects.WorkingBoardImpl#postTask(passiveobjects.Task)}.
+	 * {@link passiveObjects.WorkingBoardImpl#postTask(passiveObjects.Task)}.
 	 */
 	@Test
 	public void testPostTask() {
-		fail("Not yet implemented"); // TODO
+		String randStr = UUID.randomUUID().toString();
+		String randStr2 = UUID.randomUUID().toString();
+		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
+		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+				randStr2);
+		int size = (int) Math.round(Math.random() * 100) + 1;
+		List<Resource> resources = null;
+		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+				resources);
+		workingBoard.postTask(task);
+		assertEquals(task, workingBoard.findTask(task));
+		Task falseTask = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+				resources);
+		assertEquals(null, workingBoard.findTask(falseTask));
 	}
 
 	/**
 	 * Test method for
-	 * {@link passiveobjects.WorkingBoardImpl#removeTask(passiveobjects.Task)}.
+	 * {@link passiveObjects.WorkingBoardImpl#removeTask(passiveObjects.Task)}.
 	 */
 	@Test
 	public void testRemoveTask() {
-		fail("Not yet implemented"); // TODO
+		String randStr = UUID.randomUUID().toString();
+		String randStr2 = UUID.randomUUID().toString();
+		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
+		ManagerSpecializtion managerSpecializtion = new ManagerSpecializtion(
+				randStr2);
+		int size = (int) Math.round(Math.random() * 100) + 1;
+		List<Resource> resources = null;
+		Task task = new TaskImpl(managerSpecializtion, workerSpecialty, size,
+				resources);
+		workingBoard.postTask(task);
+		assertEquals(task, workingBoard.findTask(task));
+		workingBoard.removeTask(task);
+		assertEquals(null, workingBoard.findTask(task));
 	}
 
 }

@@ -39,6 +39,7 @@ public class Repl {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("This is the observer REPL.");
 		nextCommand(commands, sc);
+		System.out.println("BYE");
 
 	}
 
