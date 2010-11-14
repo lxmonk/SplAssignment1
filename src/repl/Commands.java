@@ -9,6 +9,7 @@ package repl;
  */
 public enum Commands {
 	currentProjects, pendingProjects, completedProjects, abortProjcet, project, 
-	workers, worker, addWorker, departmentManager, addDepartmentManager, stop
+	workers, worker, addWorker, departmentManager, addDepartmentManager, stop,
+        help
 
 }
