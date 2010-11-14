@@ -32,10 +32,13 @@ public class ProjectBox {
 		return projectQueue.poll();
 	}
 
-	public synchronized void addProject(Project project) throws RuntimeException {
-		if (!project.getNextManagerSpecializtion().equals(this.managerSpecializtion)){
+	public synchronized void addProject(Project project)
+			throws RuntimeException {
+		if (!project.getNextManagerSpecializtion().equals(
+				this.managerSpecializtion)) {
 			throw new RuntimeException("the next manager in project "
-					+ project.getName() + " did not match the one in ProjectBox "
+					+ project.getName()
+					+ " did not match the one in ProjectBox "
 					+ this.managerSpecializtion.specialization);
 		}
 		projectQueue.add(project);
