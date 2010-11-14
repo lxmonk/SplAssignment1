@@ -26,7 +26,8 @@ public class Repl {
 	// }
 
 	/**
-	 * @param args
+	 * main method
+	 * @param args String array of arguments.
 	 */
 	public static void main(String[] args) {
 		Set<String> commands = new HashSet<String>();
@@ -38,9 +39,7 @@ public class Repl {
 		}
 		Scanner sc = new Scanner(System.in);
 		System.out.println("This is the observer REPL.");
-		nextCommand(commands, sc);
-		System.out.println("BYE");
-
+		Repl.nextCommand(commands, sc);
 	}
 
 	private static void nextCommand(Set<String> commands, Scanner sc) {
@@ -48,30 +47,29 @@ public class Repl {
 		String in = sc.next();
 		if (commands.contains(in)) {
 			if (in.equals("currentProjects")) {
-				currentProjects(vec(sc));
+				Repl.currentProjects(Repl.vec(sc));
 			} else if (in.equals("pendingProjects")) {
-				pendingProjects(vec(sc));
+				Repl.pendingProjects(Repl.vec(sc));
 			} else if (in.equals("completedProjects")) {
-				completedProjects(vec(sc));
+				Repl.completedProjects(Repl.vec(sc));
 			} else if (in.equals("abortProjcet")) {
-				abortProjcet(vec(sc));
+				Repl.abortProjcet(Repl.vec(sc));
 			} else if (in.equals("project")) {
-				project(vec(sc));
+				Repl.project(Repl.vec(sc));
 			} else if (in.equals("workers")) {
-				workers(vec(sc));
+				Repl.workers(Repl.vec(sc));
 			} else if (in.equals("worker")) {
-				worker(vec(sc));
+				Repl.worker(Repl.vec(sc));
 			} else if (in.equals("addWorker")) {
-				addWorker(vec(sc));
+				Repl.addWorker(Repl.vec(sc));
 			} else if (in.equals("departmentManager")) {
-				departmentManager(vec(sc));
+				Repl.departmentManager(Repl.vec(sc));
 			} else if (in.equals("addDepartmentManager")) {
-				addDepartmentManager(vec(sc));
+				Repl.addDepartmentManager(Repl.vec(sc));
 			} else if (in.equals("stop")) {
-				/*stop();*/
-				return;
+				Repl.stop();
 			} else if (in.equals("help")) {
-				help();
+				Repl.help();
 			}
 		} else {
 			System.out.println("USAGE: command \"" + in
@@ -79,11 +77,11 @@ public class Repl {
 					+ "sensetive)\n" + "type 'help' to see all "
 					+ "available commands.");
 		}
-		nextCommand(commands, sc);
+		Repl.nextCommand(commands, sc);
 	}
 
 	private static void help() {
-		System.out.println();
+		System.out.println("help");
 
 	}
 
@@ -95,7 +93,7 @@ public class Repl {
 
 	private static void addDepartmentManager(Vector<String> vec) {
 		// TODO Auto-generated method stub
-
+		System.out.println("addDepartmentManager");
 	}
 
 	private static void departmentManager(Vector<String> vec) {
