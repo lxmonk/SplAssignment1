@@ -23,7 +23,7 @@ public class Manager implements Runnable {
 	ManagerSpecialization managerSpecializtion;
 	ManagerBoard managerBoard;
 	WorkingBoard workingBoard;
-	Set<Project> completedProjects;
+	List<Project> completedProjects;
 	ProjectBox projectBox;
 	Project currentProject;
 
@@ -43,7 +43,7 @@ public class Manager implements Runnable {
 	 */
 	public Manager(String aName, ManagerSpecialization aManagerSpecialization,
 			ManagerBoard theManagerBoard, WorkingBoard theWorkingBoard,
-			Set<Project> completedProjectsList) {
+			List<Project> completedProjectsList) {
 		this.name = aName;
 		this.managerSpecializtion = aManagerSpecialization;
 		this.managerBoard = theManagerBoard;
