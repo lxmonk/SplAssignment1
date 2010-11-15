@@ -5,6 +5,7 @@ package passiveobjects;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author lxmonk
@@ -14,10 +15,18 @@ public class ProjectBoxImpl implements ProjectBox {
 
 	Queue<Project> projectQueue;
 	ManagerSpecialization managerSpecialization;
+	Object Lock;
 
-	public ProjectBoxImpl(ManagerSpecialization managerSpecialization) {
-		projectQueue = new LinkedList<Project>();
-		this.managerSpecialization = managerSpecialization;
+	/**
+	 * constructor
+	 * 
+	 * @param aManagerSpecialization
+	 *            the {@link ManagerSpecialization} of this {@link ProjectBox}.
+	 */
+	public ProjectBoxImpl(ManagerSpecialization aManagerSpecialization) {
+		this.projectQueue = new ConcurrentLinkedQueue<Project>();
+		this.managerSpecialization = aManagerSpecialization;
+		this.Lock = new Object();
 	}
 
 	/*
@@ -35,8 +44,10 @@ public class ProjectBoxImpl implements ProjectBox {
 					+ " did not match the one in ProjectBox "
 					+ this.managerSpecialization.specialization);
 		}
-		projectQueue.add(project);
-		this.notify(); // no reason to wake up everybody to handle 1 project.
+		synchronized (Lock) {
+			this.projectQueue.add(project);
+			this.notify(); // no reason to wake up everybody to handle 1 project.
+		}
 	}
 
 	/*
@@ -46,15 +57,16 @@ public class ProjectBoxImpl implements ProjectBox {
 	 */
 	@Override
 	public synchronized Project getProject() {
-		while (projectQueue.isEmpty()) {
+		while (this.projectQueue.isEmpty()) {
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Thread.currentThread().interrupt();
+				break;
 			}
 		}
-		return projectQueue.poll();
+		return this.projectQueue.poll();
 	}
 
 	/*
@@ -64,19 +76,20 @@ public class ProjectBoxImpl implements ProjectBox {
 	 */
 	@Override
 	public void removeProject(Project project) throws RuntimeException {
+		this.projectQueue.remove(project);
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see passiveobjects.ProjectBox#getManagerSpecializtion(passiveobjects.Project)
+	 * @see
+	 * passiveobjects.ProjectBox#getManagerSpecializtion(passiveobjects.Project)
 	 */
 	@Override
 	public ManagerSpecialization getManagerSpecializtion() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.managerSpecialization;
 	}
 
 }

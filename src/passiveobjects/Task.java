@@ -5,8 +5,6 @@ package passiveobjects;
 
 import java.util.List;
 
-import javax.sql.rowset.spi.SyncResolver;
-
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
 

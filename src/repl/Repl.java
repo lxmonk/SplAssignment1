@@ -81,7 +81,11 @@ public class Repl {
 	}
 
 	private static void help() {
-		System.out.println("help");
+		System.out.println("the available commands are:");
+		System.out.println("currentProjects, pendingProjects," +
+				"completedProjects, abortProjcet, project, workers," +
+				"worker, addWorker, departmentManager," +
+				"addDepartmentManager, stop, help");
 
 	}
 

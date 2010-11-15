@@ -3,9 +3,12 @@
  */
 package passiveobjects;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import acitiveobjects.Manager;
 
@@ -18,7 +21,7 @@ public class ProjectImpl implements Project {
 	Queue<Task> tasks;
 	List<Task> completedTasks;
 	Manager lastManager; //should there be also current manager?
-	long totalHours;
+	int totalHours;
 	
 	/**
 	 * constructor
@@ -27,13 +30,13 @@ public class ProjectImpl implements Project {
 	 */
 	public ProjectImpl(String aName, List<Task> initialTaskList){
 		this.name = aName;
-		this.tasks = new LinkedList<Task>();
+		this.tasks = new ConcurrentLinkedQueue<Task>();
 		for (Task task : initialTaskList){
 			this.tasks.add(task);
 		}
-		completedTasks = new LinkedList<Task>();
-		lastManager = null;
-		totalHours = 0;
+		this.completedTasks = new Vector<Task>();
+		this.lastManager = null;
+		this.totalHours = 0;
 	}
 
 	/* (non-Javadoc)
@@ -41,8 +44,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public void addTask(Task task) {
-		// TODO Auto-generated method stub
-
+		this.tasks.add(task);
 	}
 
 	/* (non-Javadoc)
@@ -50,6 +52,9 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public void addTasks(List<Task> taskList) {
+		for (Task task : taskList){
+			this.tasks.add(task);
+		}
 		// TODO Auto-generated method stub
 
 	}
@@ -59,8 +64,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public List<Task> getCompletedTasks() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.completedTasks;
 	}
 
 	/* (non-Javadoc)
@@ -68,8 +72,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public Manager getManager() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.lastManager;
 	}
 
 	/* (non-Javadoc)
@@ -77,8 +80,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public String getManagerName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getManager().getName();
 	}
 
 	/* (non-Javadoc)
@@ -86,8 +88,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
 	/* (non-Javadoc)
@@ -95,8 +96,7 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public ManagerSpecialization getNextManagerSpecializtion() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getNextTask().getManagerSpecializtion();
 	}
 
 	/* (non-Javadoc)
@@ -104,17 +104,25 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public Task getNextTask() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.tasks.peek();
 	}
 
 	/* (non-Javadoc)
 	 * @see passiveObjects.Project#getTotalHours()
 	 */
 	@Override
-	public long getTotalHours() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getTotalHours() {
+		return this.totalHours;
+	}
+
+	@Override
+	public void removeTask(Task task) {
+		this.tasks.poll();
+	}
+
+	@Override
+	public void updateTotalHours(int hours) {
+		this.totalHours += hours;
 	}
 
 }

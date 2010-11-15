@@ -78,9 +78,12 @@ public class Manager implements Runnable {
 		while (!Thread.interrupted()) {
 			this.currentProject = this.projectBox.getProject();
 			Task currentTask = this.currentProject.getNextTask();
+			this.currentProject.removeTask(currentTask);
 			this.workingBoard.postTask(currentTask);
 			// will wait until completion - according to postTask method.
 			this.workingBoard.removeTask(currentTask);
+			this.currentProject.updateTotalHours(currentTask.getSize());
+			this.currentProject.getCompletedTasks().add(currentTask);
 			Task nextTask = this.currentProject.getNextTask();
 			ManagerSpecialization nextManagerSpecialization = null;
 			if (nextTask == null) { // the project is done

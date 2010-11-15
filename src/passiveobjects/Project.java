@@ -12,10 +12,18 @@ import acitiveobjects.Manager;
  *
  */
 public interface Project {
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName();
 	
 	public Task getNextTask();
+	/**
+	 * removes the {@link Task} task from the project.
+	 * @param task the {@link Task} to be removed.
+	 */
+	public void removeTask(Task task);
 	
 	public List<Task> getCompletedTasks();
 	
@@ -23,11 +31,17 @@ public interface Project {
 	
 	public String getManagerName();
 	
-	public long getTotalHours();
+	public int getTotalHours();
 	
 	public ManagerSpecialization getNextManagerSpecializtion();
 	
 	public void addTask(Task task);
 	
 	public void addTasks(List<Task> taskList);
+	
+	/**
+	 * update the total number of hours invested in this project.
+	 * @param hours the amount of hours to add
+	 */
+	public void updateTotalHours(int hours);
 }
