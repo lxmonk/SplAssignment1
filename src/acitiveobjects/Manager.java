@@ -5,6 +5,7 @@ package acitiveobjects;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerSpecialization;
@@ -26,6 +27,7 @@ public class Manager implements Runnable {
 	List<Project> completedProjects;
 	ProjectBox projectBox;
 	Project currentProject;
+	Logger logger;
 
 	/**
 	 * constructor for DepartmentManager.
@@ -43,12 +45,13 @@ public class Manager implements Runnable {
 	 */
 	public Manager(String aName, ManagerSpecialization aManagerSpecialization,
 			ManagerBoard theManagerBoard, WorkingBoard theWorkingBoard,
-			List<Project> completedProjectsList) {
+			List<Project> completedProjectsList, Logger aLogger) {
 		this.name = aName;
 		this.managerSpecializtion = aManagerSpecialization;
 		this.managerBoard = theManagerBoard;
 		this.workingBoard = theWorkingBoard;
 		this.completedProjects = completedProjectsList;
+		this.logger = aLogger;
 		this.currentProject = null;
 
 	}

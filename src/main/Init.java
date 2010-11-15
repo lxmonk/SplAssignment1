@@ -35,6 +35,8 @@ import passiveobjects.ProjectBox;
 import passiveobjects.ProjectBoxImpl;
 import passiveobjects.ProjectImpl;
 import passiveobjects.Resource;
+import passiveobjects.Task;
+import passiveobjects.TaskImpl;
 import passiveobjects.Warehouse;
 import passiveobjects.WarehouseImpl;
 import passiveobjects.WorkerSpecialty;
@@ -98,7 +100,7 @@ public class Init {
 		}
 
 		// config.parse(args[?])
-		Init.parse(configTxt, logger); // ???
+		// Init.parse(configTxt, logger); // ???
 		/* create the ProjectBoxes */
 		logger.info("creating Project Boxes");
 		int numOfManagerSpecializations = Integer.parseInt(configTxt
@@ -117,15 +119,26 @@ public class Init {
 			ProjectBox projectBox = new ProjectBoxImpl(managerSpecialization);
 			initMap.put(managerSpecialization, projectBox);
 		}
-		/* create the projects */
+		/* create the resources */
+		int numOfResources = Integer.parseInt(configTxt
+				.getProperty("numOfResources"));
+		for (int i = 0; i < numOfResources; i++) {
+			String si = String.valueOf(i);
+			Resource resource = new Resource(configTxt.getProperty("resource"
+					+ si + "Name"), Integer.parseInt(configTxt
+					.getProperty("resource" + si + "Amount")));
+			resources.add(resource);
+		}
 
 		/* create managers */
-		int numOfMangers = Integer.parseInt(configTxt.getProperty("numOfMangers"));
-		for (int i = 1; i <= numOfMangers; i++) {
+		int numOfMangers = Integer.parseInt(configTxt
+				.getProperty("numOfMangers"));
+		for (int i = 0; i < numOfMangers; i++) {
 			String si = String.valueOf(i);
-			Manager manager = new Manager(configTxt.getProperty("manager" + si + "Name"), 
-					new ManagerSpecialization(configTxt.getProperty("manager" + si + "Specialty")),
-					managerBoard, workingBoard, completedProjects);
+			Manager manager = new Manager(configTxt.getProperty("manager" + si
+					+ "Name"), new ManagerSpecialization(configTxt
+					.getProperty("manager" + si + "Specialty")), managerBoard,
+					workingBoard, completedProjects, logger);
 			managers.add(manager);
 		}
 
@@ -136,14 +149,34 @@ public class Init {
 		}
 		int numOfWorkers = Integer.parseInt(configTxt
 				.getProperty("numOfWorkers"));
-		for (int i = 1; i <= numOfWorkers; i++) {
+		for (int i = 0; i < numOfWorkers; i++) {
 			String si = String.valueOf(i);
-			Worker worker = new Worker(configTxt.getProperty(
-					"worker" + si + "Name"), 
-					Integer.parseInt(configTxt.getProperty("worker" + si + "WorkHours")), 
-					Init.arr2spec(configTxt.getProperty(
-							"worker" + si + "specialties").split(",")));
+			Worker worker = new Worker(configTxt.getProperty("worker" + si
+					+ "Name"), Integer.parseInt(configTxt.getProperty("worker"
+					+ si + "WorkHours")), Init.arr2spec(configTxt.getProperty(
+					"worker" + si + "specialties").split(",")), logger);
 			workers.add(worker);
+		}
+
+		/* create the projects */
+		int numOfProjects = Integer.parseInt(projectsTxt
+				.getProperty("numOfProjects"));
+		for (int i = 0; i < numOfProjects; i++) {
+			String si = String.valueOf(i);
+			List<Task> taskList = new Vector<Task>();
+			String pIname = projectsTxt.getProperty("project" + si + "Name");
+			int pNumOfTasks = Integer.parseInt(projectsTxt.getProperty(
+					"p" + si + "NumOfTasks"));
+			for (int j = 0; j < pNumOfTasks; j++) {
+				String ts = "Task" + String.valueOf(j);
+				Task task = new TaskImpl(new ManagerSpecialization(projectsTxt.getProperty(
+						"p" + si + ts + "ManagerSpecialty")), 
+						new WorkerSpecialty(projectsTxt.getProperty(
+								"p" + si + ts + "WorkerSpecialty")), 
+								Integer.parseInt(projectsTxt.getProperty("p" + si + ts + "Time")),
+								Init.arr2res(projectsTxt.getProperty("p" + si + ts + "Tools").split(",")));
+			}
+			Project project = new ProjectImpl();
 		}
 
 		/* populate the boards */
@@ -171,6 +204,14 @@ public class Init {
 		for (Manager manager : managers)
 			mangersExecutorService.execute(manager);
 
+	}
+
+	private static List<Resource> arr2res(String[] arr) {
+		Vector<Resource> vec = new Vector<Resource>();
+		for (String s : arr) {
+			vec.add(new Resource(s));
+		}
+		return vec;
 	}
 
 	private static Vector<WorkerSpecialty> arr2spec(String[] arr) {
