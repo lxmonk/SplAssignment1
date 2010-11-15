@@ -2,5 +2,7 @@
 #
 # Ignore class files
 *.class
+bin/*
 # Ignore vim backup files
 *~
+

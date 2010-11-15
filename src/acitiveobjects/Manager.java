@@ -4,6 +4,7 @@
 package acitiveobjects;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -25,6 +26,7 @@ public class Manager implements Runnable {
 	ManagerBoard managerBoard;
 	WorkingBoard workingBoard;
 	List<Project> completedProjects;
+	Map<Project, Project> executingProjects;
 	ProjectBox projectBox;
 	Project currentProject;
 	Logger logger;
@@ -42,16 +44,22 @@ public class Manager implements Runnable {
 	 *            the {@link List} of completed projects
 	 * @param theWorkingBoard
 	 *            the {@link WorkingBoard}
+	 * @param aLogger
+	 *            a {@link Logger}
+	 * @param executingProjectsRef
+	 *            a reference to the set (Map) of projects being executed.
 	 */
 	public Manager(String aName, ManagerSpecialization aManagerSpecialization,
 			ManagerBoard theManagerBoard, WorkingBoard theWorkingBoard,
-			List<Project> completedProjectsList, Logger aLogger) {
+			List<Project> completedProjectsList,
+			Map<Project, Project> executingProjectsRef, Logger aLogger) {
 		this.name = aName;
 		this.managerSpecializtion = aManagerSpecialization;
 		this.managerBoard = theManagerBoard;
 		this.workingBoard = theWorkingBoard;
 		this.completedProjects = completedProjectsList;
 		this.logger = aLogger;
+		this.executingProjects = executingProjectsRef;
 		this.currentProject = null;
 
 	}

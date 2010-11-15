@@ -5,8 +5,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,18 +12,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import acitiveobjects.Manager;
-import acitiveobjects.Observer;
-import acitiveobjects.Worker;
 
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerBoardImpl;
@@ -42,6 +35,9 @@ import passiveobjects.WarehouseImpl;
 import passiveobjects.WorkerSpecialty;
 import passiveobjects.WorkingBoard;
 import passiveobjects.WorkingBoardImpl;
+import acitiveobjects.Manager;
+import acitiveobjects.Observer;
+import acitiveobjects.Worker;
 
 /**
  * @author lxmonk
@@ -55,15 +51,15 @@ public class Init {
 	 */
 	public static void main(String[] args) {
 		/* create the logger */
-		Logger logger = Logger.getLogger("TestingLog");
+		Logger logger = Logger.getLogger("SplAssignment1.Logger");
 		Handler fh = null;
 		try {
-			fh = new FileHandler("my_log.log");
+			fh = new FileHandler(args[2]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		// logger output is written to a file in fh handler - my_log.log
+		// logger output is written to a file in fh handler
 		logger.addHandler(fh);
 
 		// Set the log level specifying which message levels will be logged by
@@ -82,6 +78,7 @@ public class Init {
 		Set<WorkerSpecialty> workerSpecialties = new HashSet<WorkerSpecialty>();
 		Set<Resource> resources = new HashSet<Resource>();
 		Set<Project> projects = new HashSet<Project>();
+		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 		Map<ManagerSpecialization, ProjectBox> initMap = new HashMap<ManagerSpecialization, ProjectBox>();
 		List<Manager> managers = new Vector<Manager>();
 		List<Worker> workers = new Vector<Worker>();
@@ -138,7 +135,7 @@ public class Init {
 			Manager manager = new Manager(configTxt.getProperty("manager" + si
 					+ "Name"), new ManagerSpecialization(configTxt
 					.getProperty("manager" + si + "Specialty")), managerBoard,
-					workingBoard, completedProjects, logger);
+					workingBoard, completedProjects, executingProjects, logger);
 			managers.add(manager);
 		}
 
@@ -165,18 +162,22 @@ public class Init {
 			String si = String.valueOf(i);
 			List<Task> taskList = new Vector<Task>();
 			String pIname = projectsTxt.getProperty("project" + si + "Name");
-			int pNumOfTasks = Integer.parseInt(projectsTxt.getProperty(
-					"p" + si + "NumOfTasks"));
+			int pNumOfTasks = Integer.parseInt(projectsTxt.getProperty("p" + si
+					+ "NumOfTasks"));
 			for (int j = 0; j < pNumOfTasks; j++) {
 				String ts = "Task" + String.valueOf(j);
-				Task task = new TaskImpl(new ManagerSpecialization(projectsTxt.getProperty(
-						"p" + si + ts + "ManagerSpecialty")), 
-						new WorkerSpecialty(projectsTxt.getProperty(
-								"p" + si + ts + "WorkerSpecialty")), 
-								Integer.parseInt(projectsTxt.getProperty("p" + si + ts + "Time")),
-								Init.arr2res(projectsTxt.getProperty("p" + si + ts + "Tools").split(",")));
+				Task task = new TaskImpl(new ManagerSpecialization(projectsTxt
+						.getProperty("p" + si + ts + "ManagerSpecialty")),
+						new WorkerSpecialty(projectsTxt.getProperty("p" + si
+								+ ts + "WorkerSpecialty")), Integer
+								.parseInt(projectsTxt.getProperty("p" + si + ts
+										+ "Time")), Init.arr2res(projectsTxt
+								.getProperty("p" + si + ts + "Tools")
+								.split(",")));
+				taskList.add(task);
 			}
-			Project project = new ProjectImpl();
+			Project project = new ProjectImpl(pIname, taskList);
+			projects.add(project);
 		}
 
 		/* populate the boards */
