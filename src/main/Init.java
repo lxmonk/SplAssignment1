@@ -50,6 +50,7 @@ public class Init {
 	 *            the invocation arguments.
 	 */
 	public static void main(String[] args) {
+
 		/* create the logger */
 		Logger logger = Logger.getLogger("SplAssignment1.Logger");
 		Handler fh = null;
@@ -74,12 +75,15 @@ public class Init {
 		Warehouse warehouse = new WarehouseImpl();
 		List<Project> completedProjects = new Vector<Project>();
 		/* create temporary data structures */
-		Set<ManagerSpecialization> managerSpecializations = new HashSet<ManagerSpecialization>();
+		// Map<String, ManagerSpecialization> managerSpecializations = new
+		// HashMap<
+		// String, ManagerSpecialization>();
+		Vector<String> managerSpecializations = new Vector<String>();
 		Set<WorkerSpecialty> workerSpecialties = new HashSet<WorkerSpecialty>();
 		Set<Resource> resources = new HashSet<Resource>();
-		Set<Project> projects = new HashSet<Project>();
+		List<ProjectImpl> projects = new Vector<ProjectImpl>();
 		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
-		Map<ManagerSpecialization, ProjectBox> initMap = new HashMap<ManagerSpecialization, ProjectBox>();
+		Map<String, ProjectBox> initMap = new HashMap<String, ProjectBox>();
 		List<Manager> managers = new Vector<Manager>();
 		List<Worker> workers = new Vector<Worker>();
 
@@ -98,7 +102,8 @@ public class Init {
 
 		// config.parse(args[?])
 		// Init.parse(configTxt, logger); // ???
-		/* create the ProjectBoxes */
+
+		/* prepare to create the ProjectBoxes */
 		logger.info("creating Project Boxes");
 		int numOfManagerSpecializations = Integer.parseInt(configTxt
 				.getProperty("numOfManagerSpecialities")); // Redundant??
@@ -108,13 +113,14 @@ public class Init {
 				.split(",");
 		String[] specialties = configTxt.getProperty("workerSpecialties")
 				.split(",");
+
 		/* create ManagerSpecializations and ProjectBoxes */
 		for (String specialization : specializations) {
 			ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 					specialization);
-			managerSpecializations.add(managerSpecialization);
+			managerSpecializations.add(managerSpecialization.getSpecialization());
 			ProjectBox projectBox = new ProjectBoxImpl(managerSpecialization);
-			initMap.put(managerSpecialization, projectBox);
+			initMap.put(managerSpecialization.getSpecialization(), projectBox);
 		}
 		/* create the resources */
 		int numOfResources = Integer.parseInt(configTxt
@@ -129,7 +135,7 @@ public class Init {
 
 		/* create managers */
 		int numOfMangers = Integer.parseInt(configTxt
-				.getProperty("numOfMangers"));
+				.getProperty("numOfManagers"));
 		for (int i = 0; i < numOfMangers; i++) {
 			String si = String.valueOf(i);
 			Manager manager = new Manager(configTxt.getProperty("manager" + si
@@ -176,7 +182,7 @@ public class Init {
 								.split(",")));
 				taskList.add(task);
 			}
-			Project project = new ProjectImpl(pIname, taskList);
+			ProjectImpl project = new ProjectImpl(pIname, taskList);
 			projects.add(project);
 		}
 
@@ -185,9 +191,17 @@ public class Init {
 			warehouse.addResource(resource);
 		}
 		managerBoard.createProjectsMap(initMap);
-		for (Project project : projects) {
+		for (ProjectImpl project : projects) {
+			ManagerSpecialization ms = project.getNextManagerSpecializtion();
+			if (!managerSpecializations.contains(ms.getSpecialization())) {
+				System.out.println(ms.getSpecialization()
+						+ " is not a known specialization");
+			} else {
+			System.out.println(managerBoard.getProjectBox(project
+					.getNextManagerSpecializtion()));
 			managerBoard.getProjectBox(project.getNextManagerSpecializtion())
 					.addProject(project);
+			}
 		}
 		/* create the observer */
 		Observer observer = new Observer();

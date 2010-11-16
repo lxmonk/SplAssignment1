@@ -23,6 +23,7 @@ public class ProjectImpl implements Project {
 	Manager lastManager; //should there be also current manager?
 	int totalHours;
 	
+	
 	/**
 	 * constructor
 	 * @param aName {@link Project} name.
@@ -123,6 +124,32 @@ public class ProjectImpl implements Project {
 	@Override
 	public void updateTotalHours(int hours) {
 		this.totalHours += hours;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		ProjectImpl other = (ProjectImpl) obj;
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		return true;
 	}
 
 }

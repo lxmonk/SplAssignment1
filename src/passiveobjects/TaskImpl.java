@@ -88,7 +88,7 @@ public class TaskImpl implements Task {
 
 	@Override
 	public ManagerSpecialization getManagerSpecializtion() {
-		return this.manager.getSpecializtion();
+		return this.managerSpecialization;
 	}
 
 	@Override

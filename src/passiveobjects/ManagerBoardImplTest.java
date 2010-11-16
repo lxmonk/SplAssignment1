@@ -52,8 +52,8 @@ public class ManagerBoardImplTest {
 		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr);
 		ProjectBoxImpl projectBoxImpl = new ProjectBoxImpl(managerSpecialization);
-		Map<ManagerSpecialization, ProjectBox> map = new ConcurrentHashMap<ManagerSpecialization, ProjectBox>();
-		map.put(managerSpecialization, projectBoxImpl);
+		Map<String, ProjectBox> map = new ConcurrentHashMap<String, ProjectBox>();
+		map.put(managerSpecialization.getSpecialization(), projectBoxImpl);
 		((ManagerBoardImpl) this.managerBoard).createProjectsMap(map);
 		assertEquals(projectBoxImpl, managerBoard
 				.getProjectBox(managerSpecialization));

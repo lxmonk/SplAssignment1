@@ -3,6 +3,7 @@
  */
 package passiveobjects;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,7 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ManagerBoardImpl implements ManagerBoard {
 
-	Map<ManagerSpecialization, ProjectBox> map;
+	Map<String, ProjectBox> map;
+	private List<String> specList;
 
 	/*
 	 * (non-Javadoc)
@@ -20,7 +22,7 @@ public class ManagerBoardImpl implements ManagerBoard {
 	 * @see passiveObjects.ManagerBoard#getPendingProjects()
 	 */
 	@Override
-	public Map<ManagerSpecialization, ProjectBox> getPendingProjects() {
+	public Map<String, ProjectBox> getPendingProjects() {
 		return this.map;
 	}
 
@@ -33,7 +35,7 @@ public class ManagerBoardImpl implements ManagerBoard {
 	 */
 	@Override
 	public ProjectBoxImpl getProjectBox(ManagerSpecialization specialization) {
-		return (ProjectBoxImpl) this.map.get(specialization);
+		return (ProjectBoxImpl) this.map.get(specialization.getSpecialization());
 	}
 
 	/*
@@ -42,8 +44,8 @@ public class ManagerBoardImpl implements ManagerBoard {
 	 * @see passiveobjects.ManagerBoard#createProjectsMap(java.util.Map)
 	 */
 	@Override
-	public void createProjectsMap(Map<ManagerSpecialization, ProjectBox> initMap) {
-		this.map = new ConcurrentHashMap<ManagerSpecialization, ProjectBox>(initMap);
+	public void createProjectsMap(Map<String, ProjectBox> initMap) {
+		this.map = new ConcurrentHashMap<String, ProjectBox>(initMap);
 
 	}
 

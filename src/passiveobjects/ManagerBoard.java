@@ -19,7 +19,7 @@ public interface ManagerBoard {
 	 * @post none.
 	 * @return a map of all the {@link Project}s waiting to be executed.
 	 */
-	public Map<ManagerSpecialization, ProjectBox> getPendingProjects();
+	public Map<String, ProjectBox> getPendingProjects();
 
 	/**
 	 * return the {@link ProjectBox} containing all the {@link Project}s by a
@@ -44,6 +44,6 @@ public interface ManagerBoard {
 	 *            a map with {@link ManagerSpecialization} as keys and the
 	 *            corresponding {@link ProjectBox} as values.
 	 */
-	public void createProjectsMap(Map<ManagerSpecialization, ProjectBox> map);
+	public void createProjectsMap(Map<String, ProjectBox> map);
 
 }
