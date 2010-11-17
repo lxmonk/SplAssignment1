@@ -1,0 +1,73 @@
+numOfProjects=5
+
+project0Name=project0
+p0NumOfTasks=3
+p0Task0ManagerSpecialty=manager_specialty0
+p0Task0Time=18
+p0Task0WorkerSpecialty=worker_speciality1
+p0Task0Tools=resource2, resource0
+p0Task1ManagerSpecialty=manager_specialty2
+p0Task1Time=15
+p0Task1WorkerSpecialty=worker_speciality2
+p0Task1Tools=resource1
+p0Task2ManagerSpecialty=manager_specialty1
+p0Task2Time=14
+p0Task2WorkerSpecialty=worker_speciality3
+p0Task2Tools=resource1, resource2
+
+project1Name=project1
+p1NumOfTasks=2
+p1Task0ManagerSpecialty=manager_specialty0
+p1Task0Time=14
+p1Task0WorkerSpecialty=worker_speciality0
+p1Task0Tools=resource1, resource3
+p1Task1ManagerSpecialty=manager_specialty0
+p1Task1Time=17
+p1Task1WorkerSpecialty=worker_speciality3
+p1Task1Tools=resource0
+
+project2Name=project2
+p2NumOfTasks=4
+p2Task0ManagerSpecialty=manager_specialty0
+p2Task0Time=15
+p2Task0WorkerSpecialty=worker_speciality2
+p2Task0Tools=resource1, resource2
+p2Task1ManagerSpecialty=manager_specialty1
+p2Task1Time=11
+p2Task1WorkerSpecialty=worker_speciality3
+p2Task1Tools=resource1, resource0
+p2Task2ManagerSpecialty=manager_specialty0
+p2Task2Time=18
+p2Task2WorkerSpecialty=worker_speciality1
+p2Task2Tools=resource0
+p2Task3ManagerSpecialty=manager_specialty1
+p2Task3Time=18
+p2Task3WorkerSpecialty=worker_speciality4
+p2Task3Tools=resource2
+
+project3Name=project3
+p3NumOfTasks=2
+p3Task0ManagerSpecialty=manager_specialty1
+p3Task0Time=19
+p3Task0WorkerSpecialty=worker_speciality0
+p3Task0Tools=resource2, resource1
+p3Task1ManagerSpecialty=manager_specialty1
+p3Task1Time=19
+p3Task1WorkerSpecialty=worker_speciality4
+p3Task1Tools=resource0, resource2
+
+project4Name=project4
+p4NumOfTasks=3
+p4Task0ManagerSpecialty=manager_specialty0
+p4Task0Time=18
+p4Task0WorkerSpecialty=worker_speciality3
+p4Task0Tools=resource1
+p4Task1ManagerSpecialty=manager_specialty0
+p4Task1Time=11
+p4Task1WorkerSpecialty=worker_speciality4
+p4Task1Tools=resource1, resource3
+p4Task2ManagerSpecialty=manager_specialty2
+p4Task2Time=14
+p4Task2WorkerSpecialty=worker_speciality4
+p4Task2Tools=resource1
+

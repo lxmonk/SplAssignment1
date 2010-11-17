@@ -1,0 +1,38 @@
+numOfManagerSpecialities=3
+ManagerSpecialties=manager_specialty0, manager_specialty1, manager_specialty2
+
+numOfWorkerSpeciality=5
+workerSpecialties=worker_speciality0, worker_speciality1, worker_speciality2, worker_speciality3, worker_speciality4
+
+numOfManagers=3
+manager0Name=manager0
+manager0Specialty=manager_specialty0
+manager1Name=manager1
+manager1Specialty=manager_specialty1
+manager2Name=manager2
+manager2Specialty=manager_specialty2
+
+numOfWorkers=4
+worker0Name=worker0
+worker0WorkHours=5
+worker0specialties=worker_speciality0, worker_speciality1
+worker1Name=worker1
+worker1WorkHours=5
+worker1specialties=worker_speciality2, worker_speciality3
+worker2Name=worker2
+worker2WorkHours=5
+worker2specialties=worker_speciality4
+worker3Name=worker3
+worker3WorkHours=8
+worker3specialties=worker_speciality0, worker_speciality2
+
+numOfResources=4
+resource0Name=resource0
+resource0Amount=2
+resource1Name=resource1
+resource1Amount=1
+resource2Name=resource2
+resource2Amount=1
+resource3Name=resource3
+resource3Amount=2
+
