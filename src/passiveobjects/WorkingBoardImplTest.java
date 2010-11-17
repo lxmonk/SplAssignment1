@@ -52,7 +52,7 @@ public class WorkingBoardImplTest {
 				randStr2);
 		int size = (int) Math.round(Math.random() * 100) + 1;
 		List<Resource> resources = null;
-		Task task = new TaskImpl(managerSpecialization, workerSpecialty, size,
+		Task task = new TaskImpl(randStr+"aaa", managerSpecialization, workerSpecialty, size,
 				resources);
 		workingBoard.postTask(task);
 		assertEquals(task, workingBoard.getTaskBySpecialty(workerSpecialty));
