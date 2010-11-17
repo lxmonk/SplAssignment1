@@ -109,16 +109,18 @@ public class Init {
 				.getProperty("numOfManagerSpecialities")); // Redundant??
 		int numOfWorkerSpecialties = Integer.parseInt(configTxt
 				.getProperty("numOfWorkerSpeciality")); // Redundant??
-		String[] specializations = configTxt.getProperty("ManagerSpecialties")
+		String[] specializations = configTxt.getProperty("ManagerSpecialties").replaceAll(" ", "")
 				.split(",");
-		String[] specialties = configTxt.getProperty("workerSpecialties")
+		String[] specialties = configTxt.getProperty("workerSpecialties").replaceAll(" ", "")
 				.split(",");
 
 		/* create ManagerSpecializations and ProjectBoxes */
 		for (String specialization : specializations) {
+			
+			String DEBUG = specialization;
 			ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 					specialization);
-			managerSpecializations.add(managerSpecialization.getSpecialization());
+			managerSpecializations.add(specialization);
 			ProjectBox projectBox = new ProjectBoxImpl(managerSpecialization);
 			initMap.put(managerSpecialization.getSpecialization(), projectBox);
 		}
@@ -194,10 +196,10 @@ public class Init {
 		for (ProjectImpl project : projects) {
 			ManagerSpecialization ms = project.getNextManagerSpecializtion();
 			if (!managerSpecializations.contains(ms.getSpecialization())) {
-				System.out.println(ms.getSpecialization()
+				logger.severe(ms.getSpecialization()
 						+ " is not a known specialization");
 			} else {
-			System.out.println(managerBoard.getProjectBox(project
+			logger.info(".getProjectBox(project
 					.getNextManagerSpecializtion()));
 			managerBoard.getProjectBox(project.getNextManagerSpecializtion())
 					.addProject(project);
