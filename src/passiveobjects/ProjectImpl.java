@@ -125,6 +125,10 @@ public class ProjectImpl implements Project {
 	public void updateTotalHours(int hours) {
 		this.totalHours += hours;
 	}
+	@Override
+	public void abortProject(){
+		this.getManager().interrupt();
+	}
 
 
 	/* (non-Javadoc)
@@ -150,6 +154,12 @@ public class ProjectImpl implements Project {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void setManager(Manager manager) {
+		this.lastManager = manager;
+		
 	}
 
 }

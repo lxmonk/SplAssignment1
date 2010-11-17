@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerSpecialization;
 import passiveobjects.Project;
@@ -87,26 +88,52 @@ public class Manager implements Runnable {
 		this.projectBox = this.managerBoard.getProjectBox(this
 				.getSpecializtion());
 		while (!Thread.interrupted()) {
-			this.currentProject = this.projectBox.getProject();
-			Task currentTask = this.currentProject.getNextTask();
-			this.currentProject.removeTask(currentTask);
-			this.workingBoard.postTask(currentTask);
-			// will wait until completion - according to postTask method.
-			this.workingBoard.removeTask(currentTask);
-			this.currentProject.updateTotalHours(currentTask.getSize());
-			this.currentProject.getCompletedTasks().add(currentTask);
-			Task nextTask = this.currentProject.getNextTask();
-			ManagerSpecialization nextManagerSpecialization = null;
-			if (nextTask == null) { // the project is done
-				this.completedProjects.add(this.currentProject);
-				break;
-			} else { // the project is not done yet
-				nextManagerSpecialization = nextTask.getManagerSpecializtion();
+			try {
+				this.currentProject = this.projectBox.getProject();
+				Task currentTask = this.currentProject.getNextTask();
+				this.currentProject.setManager(this);
+				this.currentProject.removeTask(currentTask);
+				this.logger.info(this.name + " publishes task "
+						+ currentTask.getName() + " of project "
+						+ this.currentProject.getName() + " at "
+						+ Helpers.staticTimeNow());
+				this.workingBoard.postTask(currentTask);
+				// will wait until completion - according to postTask method.
+				this.workingBoard.removeTask(currentTask);
+				this.logger.info(this.name + " completed task "
+						+ currentTask.getName() + " of project "
+						+ this.currentProject.getName() + " at "
+						+ Helpers.staticTimeNow());
+				this.currentProject.updateTotalHours(currentTask.getSize());
+				this.currentProject.getCompletedTasks().add(currentTask);
+				Task nextTask = this.currentProject.getNextTask();
+				ManagerSpecialization nextManagerSpecialization = null;
+				if (nextTask == null) { // the project is done
+					this.logger.info(this.name + " completed project "
+							+ this.currentProject.getName() + " at "
+							+ Helpers.staticTimeNow());
+					this.completedProjects.add(this.currentProject);
+					break;
+				} else { // the project is not done yet
+					nextManagerSpecialization = nextTask
+							.getManagerSpecializtion();
+				}
+				ProjectBox retrunProjectBox = this.managerBoard
+						.getProjectBox(nextManagerSpecialization);
+				retrunProjectBox.addProject(this.currentProject);
+			} catch (InterruptedException ie) {
+				// TODO: handle exception
+				ie.printStackTrace();
+				}
 			}
-			ProjectBox retrunProjectBox = this.managerBoard
-					.getProjectBox(nextManagerSpecialization);
-			retrunProjectBox.addProject(this.currentProject);
 		}
-	}
 
+
+	/**
+	 * interrupt the manager (a project is aborted, for example).
+	 */
+	public void interrupt() {
+//		Thread
+		Thread.currentThread().interrupt();
+	}
 }

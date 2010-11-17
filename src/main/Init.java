@@ -5,6 +5,7 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerBoardImpl;
 import passiveobjects.ManagerSpecialization;
@@ -46,6 +48,10 @@ import acitiveobjects.Worker;
 public class Init {
 
 	/**
+	 * String arrays are used only where creating them is easier than populating
+	 * a Vector<String>, in single-threaded mode only, they are never altered
+	 * after creation.
+	 * 
 	 * @param args
 	 *            the invocation arguments.
 	 */
@@ -68,6 +74,8 @@ public class Init {
 		logger.setLevel(Level.ALL); // TODO: update this.
 		/* start the logger */
 		logger.info("logger started.");
+
+		/* create Date object */
 		/* create the Boards */
 		ManagerBoard managerBoard = new ManagerBoardImpl();
 		logger.info("ManagerBoardImpl created");
@@ -109,15 +117,13 @@ public class Init {
 				.getProperty("numOfManagerSpecialities")); // Redundant??
 		int numOfWorkerSpecialties = Integer.parseInt(configTxt
 				.getProperty("numOfWorkerSpeciality")); // Redundant??
-		String[] specializations = configTxt.getProperty("ManagerSpecialties").replaceAll(" ", "")
-				.split(",");
-		String[] specialties = configTxt.getProperty("workerSpecialties").replaceAll(" ", "")
-				.split(",");
+		String[] specializations = configTxt.getProperty("ManagerSpecialties")
+				.replaceAll(" ", "").split(",");
+		String[] specialties = configTxt.getProperty("workerSpecialties")
+				.replaceAll(" ", "").split(",");
 
 		/* create ManagerSpecializations and ProjectBoxes */
 		for (String specialization : specializations) {
-			
-			String DEBUG = specialization;
 			ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 					specialization);
 			managerSpecializations.add(specialization);
@@ -144,6 +150,8 @@ public class Init {
 					+ "Name"), new ManagerSpecialization(configTxt
 					.getProperty("manager" + si + "Specialty")), managerBoard,
 					workingBoard, completedProjects, executingProjects, logger);
+			logger.info(configTxt.getProperty("manager" + si + "Name")
+					+ Helpers.staticTimeNow());
 			managers.add(manager);
 		}
 
@@ -174,13 +182,13 @@ public class Init {
 					+ "NumOfTasks"));
 			for (int j = 0; j < pNumOfTasks; j++) {
 				String ts = "Task" + String.valueOf(j);
-				Task task = new TaskImpl(new ManagerSpecialization(projectsTxt
+				Task task = new TaskImpl( String.valueOf(j), new ManagerSpecialization(projectsTxt
 						.getProperty("p" + si + ts + "ManagerSpecialty")),
 						new WorkerSpecialty(projectsTxt.getProperty("p" + si
 								+ ts + "WorkerSpecialty")), Integer
 								.parseInt(projectsTxt.getProperty("p" + si + ts
 										+ "Time")), Init.arr2res(projectsTxt
-								.getProperty("p" + si + ts + "Tools")
+								.getProperty("p" + si + ts + "Tools").replaceAll(" ", "")
 								.split(",")));
 				taskList.add(task);
 			}
@@ -199,10 +207,13 @@ public class Init {
 				logger.severe(ms.getSpecialization()
 						+ " is not a known specialization");
 			} else {
-			logger.info(".getProjectBox(project
-					.getNextManagerSpecializtion()));
-			managerBoard.getProjectBox(project.getNextManagerSpecializtion())
-					.addProject(project);
+				managerBoard.getProjectBox(
+						project.getNextManagerSpecializtion()).addProject(
+						project);
+				logger.fine("project "
+						+ managerBoard.getProjectBox(
+								project.getNextManagerSpecializtion())
+								.toString() + "created.");
 			}
 		}
 		/* create the observer */
@@ -239,8 +250,4 @@ public class Init {
 		return vector;
 	}
 
-	private static void parse(Properties properties, Logger logger) {
-		// TODO Auto-generated method stub
-
-	}
 }

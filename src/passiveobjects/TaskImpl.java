@@ -17,6 +17,7 @@ import acitiveobjects.Worker;
  */
 public class TaskImpl implements Task {
 
+	final String name;
 	final ManagerSpecialization managerSpecialization;
 	final WorkerSpecialty workerSpecialty;
 	Manager manager;
@@ -30,6 +31,8 @@ public class TaskImpl implements Task {
 	/**
 	 * a new task constructor
 	 * 
+	 * @param aName
+	 *            the name of the {@link Task}
 	 * @param aManagerSpecialization
 	 *            the {@link ManagerSpecialization} needed to perform this task.
 	 * @param aWorkerSpecialty
@@ -39,7 +42,7 @@ public class TaskImpl implements Task {
 	 * @param resourcesList
 	 *            the Resources needed for this task
 	 */
-	public TaskImpl(ManagerSpecialization aManagerSpecialization,
+	public TaskImpl(String aName, ManagerSpecialization aManagerSpecialization,
 			WorkerSpecialty aWorkerSpecialty, int aSize,
 			List<Resource> resourcesList) {
 		this.workerSpecialty = aWorkerSpecialty;
@@ -50,6 +53,7 @@ public class TaskImpl implements Task {
 		this.resources = resourcesList;
 		this.workers = new CopyOnWriteArrayList<Worker>();
 		this.complete = false;
+		this.name = aName;
 	}
 
 	@Override
@@ -136,5 +140,10 @@ public class TaskImpl implements Task {
 	@Override
 	public synchronized void decreaseHoursStillNeeded(int hours) {
 		this.hoursNeeded -= hours;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 }

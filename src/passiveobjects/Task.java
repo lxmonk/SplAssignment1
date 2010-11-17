@@ -122,4 +122,10 @@ public interface Task {
 	 * @param manager the {@link Manager} 
 	 */
 	public void setManager(Manager manager);
+	
+	/**
+	 * returns the name of this {@link Task}.
+	 * @return the name of this {@link Task}
+	 */
+	public String getName();
 }
