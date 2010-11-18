@@ -3,8 +3,11 @@
  */
 package passiveobjects;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -14,8 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ProjectBoxImpl implements ProjectBox {
 
 	Queue<Project> projectQueue;
-	ManagerSpecialization managerSpecialization;
-	Object Lock;
+	final ManagerSpecialization managerSpecialization;
 
 	/**
 	 * constructor
@@ -26,7 +28,6 @@ public class ProjectBoxImpl implements ProjectBox {
 	public ProjectBoxImpl(ManagerSpecialization aManagerSpecialization) {
 		this.projectQueue = new ConcurrentLinkedQueue<Project>();
 		this.managerSpecialization = aManagerSpecialization;
-		this.Lock = new Object();
 	}
 
 	/*
@@ -44,10 +45,8 @@ public class ProjectBoxImpl implements ProjectBox {
 					+ " did not match the one in ProjectBox "
 					+ this.managerSpecialization);
 		}
-		synchronized (Lock) {
 			this.projectQueue.add(project);
 			this.notify(); // no reason to wake up everybody to handle 1 project.
-		}
 	}
 
 	/*
@@ -60,8 +59,7 @@ public class ProjectBoxImpl implements ProjectBox {
 		while (this.projectQueue.isEmpty()) {
 			try {
 				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 				break;
 			}
@@ -77,7 +75,6 @@ public class ProjectBoxImpl implements ProjectBox {
 	@Override
 	public void removeProject(Project project) throws RuntimeException {
 		this.projectQueue.remove(project);
-		// TODO Auto-generated method stub
 
 	}
 
@@ -90,6 +87,15 @@ public class ProjectBoxImpl implements ProjectBox {
 	@Override
 	public ManagerSpecialization getManagerSpecializtion() {
 		return this.managerSpecialization;
+	}
+
+	@Override
+	public Collection<Project> getAllProjects() {
+		Collection<Project> col = new Vector<Project>();
+		for (Object project : this.projectQueue.toArray()){
+			col.add((Project) project);
+		}
+		return col;
 	}
 
 }

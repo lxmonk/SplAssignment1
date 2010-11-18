@@ -38,6 +38,7 @@ import passiveobjects.WarehouseImpl;
 import passiveobjects.WorkerSpecialty;
 import passiveobjects.WorkingBoard;
 import passiveobjects.WorkingBoardImpl;
+import repl.Repl;
 import acitiveobjects.Manager;
 import acitiveobjects.Observer;
 import acitiveobjects.Worker;
@@ -72,21 +73,18 @@ public class Init {
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.ALL); // TODO: update this.
+		logger.setLevel(Level.ALL); // FIXME: update this.
 		/* start the logger */
-		logger.info("logger started.");
+		logger.fine("logger started.");
 
-		/* create Date object */
 		/* create the Boards */
 		ManagerBoard managerBoard = new ManagerBoardImpl();
-		logger.info("ManagerBoardImpl created");
+		logger.fine("ManagerBoardImpl created");
 		WorkingBoard workingBoard = new WorkingBoardImpl();
 		Warehouse warehouse = new WarehouseImpl();
 		List<Project> completedProjects = new Vector<Project>();
+
 		/* create temporary data structures */
-		// Map<String, ManagerSpecialization> managerSpecializations = new
-		// HashMap<
-		// String, ManagerSpecialization>();
 		Vector<String> managerSpecializations = new Vector<String>();
 		Set<WorkerSpecialty> workerSpecialties = new HashSet<WorkerSpecialty>();
 		Set<Resource> resources = new HashSet<Resource>();
@@ -113,15 +111,13 @@ public class Init {
 		// Init.parse(configTxt, logger); // ???
 
 		/* prepare to create the ProjectBoxes */
-		logger.info("creating Project Boxes");
+		logger.fine("creating Project Boxes");
 		int numOfManagerSpecializations = Integer.parseInt(configTxt
 				.getProperty("numOfManagerSpecialities")); // Redundant??
 		int numOfWorkerSpecialties = Integer.parseInt(configTxt
 				.getProperty("numOfWorkerSpeciality")); // Redundant??
-		String[] specializations = configTxt.getProperty("ManagerSpecialties")
-				.replaceAll(" ", "").split(",");
-		String[] specialties = configTxt.getProperty("workerSpecialties")
-				.replaceAll(" ", "").split(",");
+		String[] specializations = Init.parseStrArr(configTxt, "ManagerSpecialties");
+		String[] specialties = Init.parseStrArr(configTxt, "workerSpecialties");
 
 		/* create ManagerSpecializations and ProjectBoxes */
 		for (String specialization : specializations) {
@@ -140,6 +136,8 @@ public class Init {
 					+ si + "Name"), Integer.parseInt(configTxt
 					.getProperty("resource" + si + "Amount")));
 			resources.add(resource);
+			logger.fine("Resource " + resource.getName() + " added. amout: "
+					+ resource.getAmount());
 		}
 
 		/* create managers */
@@ -150,9 +148,11 @@ public class Init {
 			Manager manager = new Manager(configTxt.getProperty("manager" + si
 					+ "Name"), new ManagerSpecialization(configTxt
 					.getProperty("manager" + si + "Specialty")), managerBoard,
-					workingBoard, completedProjects, executingProjects, logger);
+					completedProjects, executingProjects);
+			manager.setLogger(logger);
+			manager.setWorkingBoard(workingBoard);
 			logger.info(configTxt.getProperty("manager" + si + "Name")
-					+ Helpers.staticTimeNow());
+					+ "started working at " + Helpers.staticTimeNow());
 			managers.add(manager);
 		}
 
@@ -168,7 +168,10 @@ public class Init {
 			Worker worker = new Worker(configTxt.getProperty("worker" + si
 					+ "Name"), Integer.parseInt(configTxt.getProperty("worker"
 					+ si + "WorkHours")), Init.arr2spec(configTxt.getProperty(
-					"worker" + si + "specialties").split(",")), workingBoard, warehouse, logger);
+					"worker" + si + "specialties").replaceAll(" ", "").split(
+					",")), workingBoard, warehouse, logger);
+			logger.info(configTxt.getProperty("worker" + si + "Name")
+					+ "started working at " + Helpers.staticTimeNow());
 			workers.add(worker);
 		}
 
@@ -183,14 +186,15 @@ public class Init {
 					+ "NumOfTasks"));
 			for (int j = 0; j < pNumOfTasks; j++) {
 				String ts = "Task" + String.valueOf(j);
-				Task task = new TaskImpl( String.valueOf(j), new ManagerSpecialization(projectsTxt
-						.getProperty("p" + si + ts + "ManagerSpecialty")),
+				Task task = new TaskImpl(String.valueOf(j),
+						new ManagerSpecialization(projectsTxt.getProperty("p"
+								+ si + ts + "ManagerSpecialty")),
 						new WorkerSpecialty(projectsTxt.getProperty("p" + si
 								+ ts + "WorkerSpecialty")), Integer
 								.parseInt(projectsTxt.getProperty("p" + si + ts
 										+ "Time")), Init.arr2res(projectsTxt
-								.getProperty("p" + si + ts + "Tools").replaceAll(" ", "")
-								.split(",")));
+								.getProperty("p" + si + ts + "Tools")
+								.replaceAll(" ", "").split(",")));
 				taskList.add(task);
 			}
 			ProjectImpl project = new ProjectImpl(pIname, taskList);
@@ -218,7 +222,7 @@ public class Init {
 			}
 		}
 		/* create the observer */
-		Observer observer = new Observer();
+		Repl observer = new Repl(executingProjects, managerBoard, completedProjects, workingBoard);
 
 		ExecutorService mangersExecutorService = Executors
 				.newCachedThreadPool();
@@ -227,12 +231,17 @@ public class Init {
 
 		observer.start();
 
-		for (Worker worker : workers)
-			workersExecutorService.execute(worker);
+//		for (Worker worker : workers)
+//			workersExecutorService.execute(worker);
+//
+//		for (Manager manager : managers)
+//			mangersExecutorService.execute(manager);
 
-		for (Manager manager : managers)
-			mangersExecutorService.execute(manager);
+	}
 
+	private static String[] parseStrArr(Properties configTxt, String string) {
+		return configTxt.getProperty("ManagerSpecialties").replaceAll(" ", "")
+				.split(",");
 	}
 
 	private static List<Resource> arr2res(String[] arr) {

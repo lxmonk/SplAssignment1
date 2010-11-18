@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ManagerBoardImpl implements ManagerBoard {
 
 	Map<String, ProjectBox> map;
-	private List<String> specList;
+//	private List<String> specList;
 
 	/*
 	 * (non-Javadoc)

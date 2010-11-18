@@ -1,5 +1,8 @@
 package passiveobjects;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 public interface ProjectBox {
 
 	/**
@@ -32,6 +35,7 @@ public interface ProjectBox {
 	 * @pre the {@link ProjectBox} contains project.
 	 * @post the {@link ProjectBox} no longer contains project.
 	 * @param project
+	 *            the {@link Project} to be removed.
 	 * @throws RuntimeException
 	 *             in case the {@link ProjectBox} does NOT contain the project.
 	 */
@@ -45,5 +49,14 @@ public interface ProjectBox {
 	 *         {@link ProjectBox}.
 	 */
 	public ManagerSpecialization getManagerSpecializtion();
+
+	/**
+	 * return a {@link Collection} of all the {@link Project}s in the
+	 * {@link ProjectBox} .
+	 * 
+	 * @return a {@link Collection} of all the {@link Project}s in the
+	 *         {@link ProjectBox}
+	 */
+	public Collection<Project> getAllProjects();
 
 }

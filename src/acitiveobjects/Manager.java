@@ -43,25 +43,40 @@ public class Manager implements Runnable {
 	 *            the {@link ManagerBoard}
 	 * @param completedProjectsList
 	 *            the {@link List} of completed projects
-	 * @param theWorkingBoard
-	 *            the {@link WorkingBoard}
-	 * @param aLogger
-	 *            a {@link Logger}
 	 * @param executingProjectsRef
 	 *            a reference to the set (Map) of projects being executed.
 	 */
 	public Manager(String aName, ManagerSpecialization aManagerSpecialization,
-			ManagerBoard theManagerBoard, WorkingBoard theWorkingBoard,
-			List<Project> completedProjectsList,
-			Map<Project, Project> executingProjectsRef, Logger aLogger) {
+			ManagerBoard theManagerBoard, List<Project> completedProjectsList,
+			Map<Project, Project> executingProjectsRef) {
 		this.name = aName;
 		this.managerSpecializtion = aManagerSpecialization;
 		this.managerBoard = theManagerBoard;
-		this.workingBoard = theWorkingBoard;
 		this.completedProjects = completedProjectsList;
-		this.logger = aLogger;
 		this.executingProjects = executingProjectsRef;
 		this.currentProject = null;
+
+	}
+
+	/**
+	 * Set the logger for this manager
+	 * 
+	 * @param aLogger
+	 *            a {@link Logger}
+	 */
+	public void setLogger(Logger aLogger) {
+		this.logger = aLogger;
+
+	}
+
+	/**
+	 * Set the {@link WorkingBoard} for this {@link Manager}
+	 * 
+	 * @param theWorkingBoard
+	 *            the {@link WorkingBoard}
+	 */
+	public void setWorkingBoard(WorkingBoard theWorkingBoard) {
+		this.workingBoard = theWorkingBoard;
 
 	}
 
@@ -92,7 +107,8 @@ public class Manager implements Runnable {
 				this.currentProject = this.projectBox.getProject();
 				Task currentTask = this.currentProject.getNextTask();
 				this.currentProject.setManager(this);
-				this.currentProject.removeTask(currentTask);
+				this.executingProjects.put(this.currentProject,
+						this.currentProject);
 				this.logger.info(this.name + " publishes task "
 						+ currentTask.getName() + " of project "
 						+ this.currentProject.getName() + " at "
@@ -104,6 +120,8 @@ public class Manager implements Runnable {
 						+ currentTask.getName() + " of project "
 						+ this.currentProject.getName() + " at "
 						+ Helpers.staticTimeNow());
+				this.executingProjects.remove(this.currentProject);
+				this.currentProject.removeTask(currentTask);
 				this.currentProject.updateTotalHours(currentTask.getSize());
 				this.currentProject.getCompletedTasks().add(currentTask);
 				Task nextTask = this.currentProject.getNextTask();
@@ -113,64 +131,70 @@ public class Manager implements Runnable {
 							+ this.currentProject.getName() + " at "
 							+ Helpers.staticTimeNow());
 					this.completedProjects.add(this.currentProject);
-					break;
 				} else { // the project is not done yet
 					nextManagerSpecialization = nextTask
 							.getManagerSpecializtion();
-				}
 				ProjectBox retrunProjectBox = this.managerBoard
 						.getProjectBox(nextManagerSpecialization);
 				retrunProjectBox.addProject(this.currentProject);
-				
-			} catch (Exception e) {
-
-			}
-//			try {
-//				this.currentProject = this.projectBox.getProject();
-//				Task currentTask = this.currentProject.getNextTask();
-//				this.currentProject.setManager(this);
-//				this.currentProject.removeTask(currentTask);
-//				this.logger.info(this.name + " publishes task "
-//						+ currentTask.getName() + " of project "
-//						+ this.currentProject.getName() + " at "
-//						+ Helpers.staticTimeNow());
-//				this.workingBoard.postTask(currentTask);
-//				// will wait until completion - according to postTask method.
-//				this.workingBoard.removeTask(currentTask);
-//				this.logger.info(this.name + " completed task "
-//						+ currentTask.getName() + " of project "
-//						+ this.currentProject.getName() + " at "
-//						+ Helpers.staticTimeNow());
-//				this.currentProject.updateTotalHours(currentTask.getSize());
-//				this.currentProject.getCompletedTasks().add(currentTask);
-//				Task nextTask = this.currentProject.getNextTask();
-//				ManagerSpecialization nextManagerSpecialization = null;
-//				if (nextTask == null) { // the project is done
-//					this.logger.info(this.name + " completed project "
-//							+ this.currentProject.getName() + " at "
-//							+ Helpers.staticTimeNow());
-//					this.completedProjects.add(this.currentProject);
-//					break;
-//				} else { // the project is not done yet
-//					nextManagerSpecialization = nextTask
-//							.getManagerSpecializtion();
-//				}
-//				ProjectBox retrunProjectBox = this.managerBoard
-//						.getProjectBox(nextManagerSpecialization);
-//				retrunProjectBox.addProject(this.currentProject);
-//			} catch (InterruptedException ie) {
-//				// TODO: handle exception
-//				ie.printStackTrace();
-//				}
-			}
+				}
+			} catch (Exception ie) {
+				if (ie instanceof InterruptedException) {
+					//TODO: implement!
+				}
+					
+				}
 		}
 
+
+			
+	}
+	
+			// try {
+			// this.currentProject = this.projectBox.getProject();
+			// Task currentTask = this.currentProject.getNextTask();
+			// this.currentProject.setManager(this);
+			// this.currentProject.removeTask(currentTask);
+			// this.logger.info(this.name + " publishes task "
+			// + currentTask.getName() + " of project "
+			// + this.currentProject.getName() + " at "
+			// + Helpers.staticTimeNow());
+			// this.workingBoard.postTask(currentTask);
+			// // will wait until completion - according to postTask method.
+			// this.workingBoard.removeTask(currentTask);
+			// this.logger.info(this.name + " completed task "
+			// + currentTask.getName() + " of project "
+			// + this.currentProject.getName() + " at "
+			// + Helpers.staticTimeNow());
+			// this.currentProject.updateTotalHours(currentTask.getSize());
+			// this.currentProject.getCompletedTasks().add(currentTask);
+			// Task nextTask = this.currentProject.getNextTask();
+			// ManagerSpecialization nextManagerSpecialization = null;
+			// if (nextTask == null) { // the project is done
+			// this.logger.info(this.name + " completed project "
+			// + this.currentProject.getName() + " at "
+			// + Helpers.staticTimeNow());
+			// this.completedProjects.add(this.currentProject);
+			// break;
+			// } else { // the project is not done yet
+			// nextManagerSpecialization = nextTask
+			// .getManagerSpecializtion();
+			// }
+			// ProjectBox retrunProjectBox = this.managerBoard
+			// .getProjectBox(nextManagerSpecialization);
+			// retrunProjectBox.addProject(this.currentProject);
+			// } catch (InterruptedException ie) {
+			// // TODO: handle exception
+			// ie.printStackTrace();
+			// }
+	
+	
 
 	/**
 	 * interrupt the manager (a project is aborted, for example).
 	 */
 	public void interrupt() {
-//		Thread
+		// Thread
 		Thread.currentThread().interrupt();
 	}
 }

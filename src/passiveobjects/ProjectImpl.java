@@ -97,7 +97,11 @@ public class ProjectImpl implements Project {
 	 */
 	@Override
 	public ManagerSpecialization getNextManagerSpecializtion() {
-		return this.getNextTask().getManagerSpecializtion();
+		try {
+			return this.getNextTask().getManagerSpecializtion();
+		} catch (Exception e) { // no next ManagerSpecialization
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)

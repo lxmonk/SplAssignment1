@@ -3,30 +3,38 @@
  */
 package passiveobjects;
 
+import acitiveobjects.Manager;
+
 /**
  * @author lxmonk
- *
+ * 
  */
 public class ManagerSpecialization {
 
 	final String specialization;
+
 	/**
 	 * constructor
-	 * @param aSpecialization the given {@link ManagerSpecialization}
+	 * 
+	 * @param aSpecialization
+	 *            the given {@link ManagerSpecialization}
 	 */
 	public ManagerSpecialization(String aSpecialization) {
 		this.specialization = aSpecialization;
 	}
+
 	/**
+	 * return this {@link Manager}'s {@link ManagerSpecialization}.
 	 * 
-	 * 
-	 * @return
+	 * @return this {@link Manager}'s {@link ManagerSpecialization}.
 	 */
-	public String getSpecialization(){
+	public String getSpecialization() {
 		return this.specialization;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -45,7 +53,5 @@ public class ManagerSpecialization {
 			return false;
 		return true;
 	}
-	
-	
 
 }

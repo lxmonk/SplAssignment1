@@ -86,7 +86,7 @@ public class ProjectBoxImplTest {
 		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
+		Task task = new TaskImpl(randStr+"90", managerSpecialization, new WorkerSpecialty(
 				randStr), (int) Math.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);
@@ -107,7 +107,7 @@ public class ProjectBoxImplTest {
 		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
+		Task task = new TaskImpl(randStr+"90A",managerSpecialization, new WorkerSpecialty(
 				randStr), (int) Math.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);
