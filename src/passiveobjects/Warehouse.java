@@ -23,15 +23,17 @@ public interface Warehouse {
 	public boolean resourcesAvailable(List<Resource> resourceList);
 
 	/**
-	 * Takes resources from the warehouse.
-	 * 
-	 * @pre all the resources in resourceList are available.
+	 * Takes resources from the warehouse, 
+	 * if not all the resources in the resourceList are available,
+	 * the worker will wait till all the resources in resourceList are available.
+	 *
+	 * @pre none
 	 * @post the taken resources are decreased from the inventory in the
 	 *       warehouse.
-	 * @param resourceList
-	 *            list of resources needed.
+	 * @param task
+	 *            the task we need the resources for
 	 */
-	public void takeResources(List<Resource> resourceList);
+	public void getResources(Task task);
 
 	/**
 	 * @post the resources in resourceList are added back to the inventory in
@@ -41,18 +43,6 @@ public interface Warehouse {
 	 */
 	public void returnResources(List<Resource> resourceList);
 
-//	/**
-//	 * adds new resources to the warehouse. This method is used for
-//	 * initialization only.
-//	 * 
-//	 * @pre none
-//	 * @post the resources in resourceList are added to the inventory in the
-//	 *       warehouse, in the amount stated.
-//	 * 
-//	 * @param resourceList
-//	 *            the resource list.
-//	 */
-//	public void addResource(List<Resource> resourceList);
 
 	/**
 	 * adds a new resource to the warehouse. This method is used for

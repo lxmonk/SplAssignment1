@@ -42,9 +42,11 @@ public class TaskImpl implements Task {
 	 * @param resourcesList
 	 *            the Resources needed for this task
 	 */
+
 	public TaskImpl(String aName, ManagerSpecialization aManagerSpecialization,
 			WorkerSpecialty aWorkerSpecialty, int aSize,
 			List<Resource> resourcesList) {
+		this.name=aName;
 		this.workerSpecialty = aWorkerSpecialty;
 		this.managerSpecialization = aManagerSpecialization;
 		this.size = aSize;
@@ -52,8 +54,8 @@ public class TaskImpl implements Task {
 		this.hoursDone = 0;
 		this.resources = resourcesList;
 		this.workers = new CopyOnWriteArrayList<Worker>();
-		this.complete = false;
-		this.name = aName;
+		this.complete=false;
+		
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class TaskImpl implements Task {
 
 	@Override
 	public int getHoursStillNeeded() {
-		return this.size - this.hoursDone;
+		return this.hoursNeeded;
 	}
 
 	@Override
@@ -122,14 +124,23 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public void addWorker(Worker worker) {
+	public synchronized int signInWorker(Worker worker) {
+		this.complete=true;
+		int workHours = worker.getWorkHours();
+		int shortShift=0;
+		if (this.hoursNeeded >= workHours)
+			this.decreaseHoursStillNeeded(workHours); 
+		else { 
+			shortShift = this.hoursNeeded; // Task will complete in the middle of the worker's workHours
+			this.decreaseHoursStillNeeded(shortShift);
+		}
 		this.workers.add(worker);
-		// TODO: do something with hours
+		return shortShift;
 	}
 
 	@Override
-	public synchronized void incrementHoursDone() {
-		this.hoursDone++;
+	public synchronized void incrementHoursDone(int hours) {
+		this.hoursDone+=hours;
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class WarehouseImplTest {
 	@Test
 	public void testAddResource() {
 		int rand = (int) Math.round(Math.random() * 100);
-		Resource hammer = new Resource("Hammer",rand);
+		Resource hammer = new Resource("Hammer", rand);
 		int amountBefore = warehouse.queryResource(hammer);
 		warehouse.addResource(hammer);
 		int amountAfter = warehouse.queryResource(hammer);
@@ -58,7 +58,7 @@ public class WarehouseImplTest {
 	 */
 	@Test
 	public void testQueryResource() {
-		/*"Simple queries are never tested."*/
+		/* "Simple queries are never tested." */
 	}
 
 	/**
@@ -68,23 +68,23 @@ public class WarehouseImplTest {
 	@Test
 	public void testResourcesAvailable() {
 		String randStr = UUID.randomUUID().toString();
-		int randInt = (int)Math.round(Math.random()*10)+1;
+		int randInt = (int) Math.round(Math.random() * 10) + 1;
 		Resource resource1 = new Resource(randStr, randInt);
-		Resource resource2 = new Resource(randStr+"2", randInt+2);
+		Resource resource2 = new Resource(randStr + "2", randInt + 2);
 		// resources to make the method fail:
-		Resource resource3 = new Resource(randStr, randInt+3);
-		Resource resource4 = new Resource(randStr+"NOT_EXISTANT", randInt+2);
+		Resource resource3 = new Resource(randStr, randInt + 3);
+		Resource resource4 = new Resource(randStr + "NOT_EXISTANT", randInt + 2);
 		List<Resource> resourseList = new ArrayList<Resource>();
 		List<Resource> failedresourseList1 = new ArrayList<Resource>();
 		List<Resource> failedresourseList2 = new ArrayList<Resource>();
-		
+
 		resourseList.add(resource1);
 		resourseList.add(resource2);
 		warehouse.addResource(resource1);
 		warehouse.addResource(resource2);
-		
+
 		assertEquals(true, warehouse.resourcesAvailable(resourseList));
-		
+
 		failedresourseList1.add(resource3);
 		failedresourseList2.add(resource4);
 		assertEquals(false, warehouse.resourcesAvailable(failedresourseList1));
@@ -98,17 +98,17 @@ public class WarehouseImplTest {
 	@Test
 	public void testReturnResources() {
 		String randStr = UUID.randomUUID().toString();
-		int randInt = (int)Math.round(Math.random()*10)+1;
+		int randInt = (int) Math.round(Math.random() * 10) + 1;
 		Resource resource1 = new Resource(randStr, randInt);
-		Resource resource2 = new Resource(randStr+"2", randInt+2);
+		Resource resource2 = new Resource(randStr + "2", randInt + 2);
 		warehouse.addResource(resource1);
 		warehouse.addResource(resource2);
 		List<Resource> resourceList = new ArrayList<Resource>();
 		resourceList.add(new Resource(randStr));
-		resourceList.add(new Resource(randStr+"2"));
+		resourceList.add(new Resource(randStr + "2"));
 		warehouse.returnResources(resourceList);
-		assertEquals(randInt+1, warehouse.queryResource(resource1));
-		assertEquals(randInt+3, warehouse.queryResource(resource2));
+		assertEquals(randInt + 1, warehouse.queryResource(resource1));
+		assertEquals(randInt + 3, warehouse.queryResource(resource2));
 	}
 
 	/**
@@ -116,19 +116,21 @@ public class WarehouseImplTest {
 	 * {@link passiveobjects.WarehouseImpl#takeResources(java.util.List)}.
 	 */
 	@Test
-	public void testTakeResources() {
+	public void testGetResources() {
 		String randStr = UUID.randomUUID().toString();
-		int randInt = (int)Math.round(Math.random()*10)+1;
+		int randInt = (int) Math.round(Math.random() * 10) + 1;
 		Resource resource1 = new Resource(randStr, randInt);
-		Resource resource2 = new Resource(randStr+"2", randInt+2);
+		Resource resource2 = new Resource(randStr + "2", randInt + 2);
 		warehouse.addResource(resource1);
 		warehouse.addResource(resource2);
 		List<Resource> resourceList = new ArrayList<Resource>();
 		resourceList.add(new Resource(randStr));
-		resourceList.add(new Resource(randStr+"2"));
-		warehouse.takeResources(resourceList);
-		assertEquals(randInt-1, warehouse.queryResource(resource1));
-		assertEquals(randInt+1, warehouse.queryResource(resource2));
+		resourceList.add(new Resource(randStr + "2"));
+		Task task = new TaskImpl(randStr + "8", new ManagerSpecialization(
+				randStr + "24"), new WorkerSpecialty(randStr + randStr),
+				randInt, resourceList);
+		warehouse.getResources(task);
+		assertEquals(randInt - 1, warehouse.queryResource(resource1));
+		assertEquals(randInt + 1, warehouse.queryResource(resource2));
 	}
-
 }

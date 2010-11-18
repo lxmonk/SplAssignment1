@@ -5,6 +5,7 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -167,7 +168,7 @@ public class Init {
 			Worker worker = new Worker(configTxt.getProperty("worker" + si
 					+ "Name"), Integer.parseInt(configTxt.getProperty("worker"
 					+ si + "WorkHours")), Init.arr2spec(configTxt.getProperty(
-					"worker" + si + "specialties").split(",")), logger);
+					"worker" + si + "specialties").split(",")), workingBoard, warehouse, logger);
 			workers.add(worker);
 		}
 
@@ -242,7 +243,7 @@ public class Init {
 		return vec;
 	}
 
-	private static Vector<WorkerSpecialty> arr2spec(String[] arr) {
+	private static List<WorkerSpecialty> arr2spec(String[] arr) {
 		Vector<WorkerSpecialty> vector = new Vector<WorkerSpecialty>();
 		for (String specialty : arr) {
 			vector.add(new WorkerSpecialty(specialty));

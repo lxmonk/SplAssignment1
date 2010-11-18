@@ -50,8 +50,9 @@ public class ProjectBoxImplTest {
 		ManagerSpecialization managerSpecialization = projectBox
 				.getManagerSpecializtion();
 		List<Task> taskList = new ArrayList<Task>();
-		Task task = new TaskImpl(managerSpecialization, new WorkerSpecialty(
-				randStr), (int) Math.round(Math.random() * 100) + 1, null);
+		Task task = new TaskImpl(randStr + "T", managerSpecialization,
+				new WorkerSpecialty(randStr), (int) Math
+						.round(Math.random() * 100) + 1, null);
 		taskList.add(task);
 		Project project = new ProjectImpl(randStr2, taskList);
 		// if the box is empty the thread will wait - untestable.
@@ -60,9 +61,9 @@ public class ProjectBoxImplTest {
 
 		ManagerSpecialization falseManagerSpecializtion = new ManagerSpecialization(
 				randStr2 + "33");
-		Task wrongTask = new TaskImpl(falseManagerSpecializtion,
-				new WorkerSpecialty(randStr), (int) Math
-						.round(Math.random() * 100) + 1, null);
+		Task wrongTask = new TaskImpl(randStr2 + "AAA",
+				falseManagerSpecializtion, new WorkerSpecialty(randStr),
+				(int) Math.round(Math.random() * 100) + 1, null);
 		taskList = new ArrayList<Task>();
 		taskList.add(wrongTask);
 		Project unrelatedProject = new ProjectImpl(randStr2, taskList);

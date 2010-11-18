@@ -36,4 +36,12 @@ public interface WorkingBoard {
 	 */
 	public Task findTask(Task task);
 	
+	/**
+	 * returns a monitor that all the workers that didn't find any
+	 * tasks, will be locked on it
+	 * 
+	 * @return a monitor
+	 */
+	public Object getNewMonitor();
+	
 }

@@ -99,17 +99,20 @@ public interface Task {
 
 	/**
 	 * adds a worker to the list of workers who worked on the task
+	 * changes the hours still needed on the task according to the worker's workHours
+	 * 
 	 * @param worker 
 	 * 				the new worker working on the task
+	 * @return if the worker will work a full shift return 0. else return the length of his short shift;
 	 */
-	public void addWorker(Worker worker);
+	public int signInWorker(Worker worker);
 
 	/**
-	 * update the number of hours done on this task by one hour.
+	 * update the number of hours done on this task.
 	 * 
-	 * 
+	 * @param hours the number of hours to the hours done on this task
 	 */
-	public void incrementHoursDone();
+	public void incrementHoursDone(int hours);
 	
 	/**
 	 * Decreases the number of hours the task still needs to be completed.

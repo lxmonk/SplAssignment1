@@ -8,6 +8,8 @@ package passiveobjects;
  *
  */
 public class WorkingBoardImpl implements WorkingBoard {
+	
+	Object newMonitor;
 
 	/* (non-Javadoc)
 	 * @see passiveObjects.WorkingBoard#getTaskBySpecialty(passiveObjects.WorkerSpecialty)
@@ -24,7 +26,7 @@ public class WorkingBoardImpl implements WorkingBoard {
 	@Override
 	public void postTask(Task task) {
 		// TODO Auto-generated method stub
-
+		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
 	}
 
 	/* (non-Javadoc)
@@ -40,6 +42,11 @@ public class WorkingBoardImpl implements WorkingBoard {
 	public Task findTask(Task task) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public synchronized Object getNewMonitor() {
+		return newMonitor;
 	}
 
 }

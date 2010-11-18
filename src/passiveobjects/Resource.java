@@ -29,8 +29,20 @@ public class Resource {
 		return this.amount;
 	}
 	
+	public void incAmount(){
+		this.amount++;
+	}
+
+	public void decAmount(){
+		this.amount--;
+	}
+	
 	public void setAmount(int amount){
 		this.amount = amount;
+	}
+	
+	public String getName(){
+		return this.type;
 	}
 
 }
