@@ -21,6 +21,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
@@ -69,11 +70,13 @@ public class Init {
 		}
 
 		// logger output is written to a file in fh handler
+		fh.setFormatter(new OurFormatter());
 		logger.addHandler(fh);
+		
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.ALL); // FIXME: update this.
+		logger.setLevel(Level.INFO); // FIXME: update this.
 		/* start the logger */
 		logger.fine("logger started.");
 
@@ -154,7 +157,7 @@ public class Init {
 			manager.setLogger(logger);
 			manager.setWorkingBoard(workingBoard);
 			logger.info(configTxt.getProperty("manager" + si + "Name")
-					+ "started working at " + Helpers.staticTimeNow());
+					+ " started working at " + Helpers.staticTimeNow());
 			managers.add(manager);
 		}
 
@@ -174,7 +177,7 @@ public class Init {
 					",")), workingBoard, warehouse);
 			worker.setLogger(logger);
 			logger.info(configTxt.getProperty("worker" + si + "Name")
-					+ "started working at " + Helpers.staticTimeNow());
+					+ " started working at " + Helpers.staticTimeNow());
 			workers.add(worker);
 		}
 
@@ -235,6 +238,8 @@ public class Init {
 		ExecutorService workersExecutorService = Executors
 				.newCachedThreadPool();
 
+		observer.setManagersExecutorService(mangersExecutorService);
+		observer.setWorkersExecutorService(workersExecutorService);
 		observer.start();
 
 		// for (Worker worker : workers)

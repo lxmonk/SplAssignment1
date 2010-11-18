@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import passiveobjects.Helpers;
@@ -19,6 +20,7 @@ import passiveobjects.ManagerBoard;
 import passiveobjects.Project;
 import passiveobjects.ProjectBox;
 import passiveobjects.ProjectImpl;
+import passiveobjects.Resource;
 import passiveobjects.Task;
 import passiveobjects.Warehouse;
 import passiveobjects.WorkerSpecialty;
@@ -40,6 +42,8 @@ public class Repl {
 	static Map<String, Worker> workers;
 	private static List<Worker> workersList;
 	private static Warehouse warehouse;
+	private static ExecutorService workersExecutorService;
+	private static ExecutorService managersExecutorService;
 	static final Scanner SC = new Scanner(System.in);
 
 	/**
@@ -97,6 +101,22 @@ public class Repl {
 		for (Worker worker : aWorkersList) {
 			Repl.workers.put(worker.getName(), worker);
 		}
+	}
+
+	/**
+	 * @param theWorkersExecutorService the workersExecutorService to set
+	 */
+	public void setWorkersExecutorService(
+			ExecutorService theWorkersExecutorService) {
+		Repl.workersExecutorService = theWorkersExecutorService;
+	}
+
+	/**
+	 * @param theManagersExecutorService the managersExecutorService to set
+	 */
+	public void setManagersExecutorService(
+			ExecutorService theManagersExecutorService) {
+		Repl.managersExecutorService = theManagersExecutorService;
 	}
 
 	/**
@@ -192,10 +212,9 @@ public class Repl {
 			Repl.workers.put(worker.getName(), worker);
 			Repl.logger.info(worker.getName() + "started working at "
 					+ Helpers.staticTimeNow());
-
+			Repl.workersExecutorService.execute(worker);
 		}
-		// TODO Auto-generated method stub
-
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void worker(Vector<String> vec) {
@@ -221,6 +240,8 @@ public class Repl {
 						ress += s + " ";
 					}
 				}
+				if (ress == "")
+					ress = "none";
 				System.out.println("Current Status: " + status + "\n"
 						+ "Resources: " + ress);
 			}
@@ -228,10 +249,12 @@ public class Repl {
 	}
 
 	private static void workers(Vector<String> vec) {
-		if (vec.size() != 0) {
+		int vecSize = vec.size();
+		if (vecSize != 0) {
 			System.out.println("USAGE: 'workers' takes exactly 0 arguments. "
-					+ vec.size() + " given.");
+					+ vecSize + " given.");
 		} else {
+			System.out.println("here");// FIXME: DLETE!
 			System.out.println("Workers: "
 					+ Repl.workerArr2Str(Repl.workers.values()));
 		}
@@ -239,16 +262,32 @@ public class Repl {
 
 	private static void project(Vector<String> vec) {
 		if (!(vec.size() == 1)) {
-			System.out
-					.println("USAGE: 'completedProjects' takes exactly 1 argument. "
-							+ vec.size() + " given.");
+			System.out.println("USAGE: 'project' takes exactly 1 argument. "
+					+ vec.size() + " given.");
 		} else {
 			if (!Repl.projects.containsKey(vec.elementAt(0))) {
 				System.out.println(vec.elementAt(0)
 						+ " is not a valid project!");
 			} else {
 				ProjectImpl project = Repl.projects.get(vec.elementAt(0));
-				// TODO: complete this function
+				List<Task> completed = project.getCompletedTasks();
+				System.out.println("Current Task: "
+						+ project.getNextTask().getName()
+						+ "\nCompleted Tasks:");
+				for (Task t : completed) {
+					System.out.print(t.getName() + ": ");
+					System.out.println("\tpublisher: " + t.getManagerName());
+					System.out.println("\tworkers: ");
+					for (Worker w : t.getWorkers()) {
+						System.out.print(w.getName() + " ");
+					}
+					System.out.println("\n\tresources used: ");
+					for (Resource r : t.getNeededResources()) {
+						System.out.print(r.getName() + " ");
+					}
+					System.out.println("\n\twork neede: " + t.getSize()
+							+ " hours.");
+				}
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);
@@ -354,10 +393,12 @@ public class Repl {
 	}
 
 	private static Vector<String> vec(Scanner sc) {
+		String input = sc.nextLine();
 		Vector<String> ret = new Vector<String>();
-		while (sc.hasNext()) {
-			ret.add(sc.next());
-		}
+		if (input.length() == 0)
+			return ret;
+		for (String s : input.substring(1).split(" "))
+			ret.add(s);
 		return ret;
 	}
 
