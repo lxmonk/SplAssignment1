@@ -114,9 +114,10 @@ public class WarehouseImplTest {
 	/**
 	 * Test method for
 	 * {@link passiveobjects.WarehouseImpl#takeResources(java.util.List)}.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testGetResources() {
+	public void testGetResources() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		int randInt = (int) Math.round(Math.random() * 10) + 1;
 		Resource resource1 = new Resource(randStr, randInt);

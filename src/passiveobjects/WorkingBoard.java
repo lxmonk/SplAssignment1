@@ -9,9 +9,9 @@ public interface WorkingBoard {
 	 * @pre none.
 	 * @post the task is added to the WorkingBoard
 	 * @param task to be added to the WorkingBoard
-	 * @param manager the {@link Manager} who posted this task.
+	 * @param manager the {@link Manager} who published the {@link Task}
 	 */
-	public void postTask(Task task, Manager manager) throws InterruptedException;
+	public void postTask(Task task,Manager manager) throws InterruptedException;
 	
 	/**
 	 * return a task by the stated specialty
@@ -35,9 +35,9 @@ public interface WorkingBoard {
 	 * @pre none.
 	 * @post none.
 	 * @param task The task we want to find
-	 * @return The task, if found, or null if not found.
+	 * @return true if found, or false if not found.
 	 */
-	public Task findTask(Task task);
+	public boolean findTask(Task task);
 	
 	/**
 	 * returns a monitor that all the workers that didn't find any

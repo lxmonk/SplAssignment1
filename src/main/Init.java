@@ -171,7 +171,8 @@ public class Init {
 					+ "Name"), Integer.parseInt(configTxt.getProperty("worker"
 					+ si + "WorkHours")), Init.arr2spec(configTxt.getProperty(
 					"worker" + si + "specialties").replaceAll(" ", "").split(
-					",")), workingBoard, warehouse, logger);
+					",")), workingBoard, warehouse);
+			worker.setLogger(logger);
 			logger.info(configTxt.getProperty("worker" + si + "Name")
 					+ "started working at " + Helpers.staticTimeNow());
 			workers.add(worker);

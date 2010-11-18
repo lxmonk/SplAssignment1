@@ -9,7 +9,7 @@ package acitiveobjects;
  */
 public class Observer {
 	/**
-	 * statt the {@link Observer}
+	 * start the {@link Observer}
 	 * 
 	 */
 	public void start() {

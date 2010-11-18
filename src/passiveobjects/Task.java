@@ -131,4 +131,21 @@ public interface Task {
 	 * @return the name of this {@link Task}
 	 */
 	public String getName();
+	
+	/**
+	 * simulates the work done on this task by a worker 
+	 * @param workHours the number of hours the worker will work
+	 */
+	public void work(int workHours);
+	
+	/**
+	 * abort working on this task
+	 */
+	public void abortTask();
+	
+	/**
+	 * return if this task is aborted
+	 * @return if this task is aborted
+	 */
+	public boolean isAborted();
 }

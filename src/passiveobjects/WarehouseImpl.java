@@ -66,17 +66,19 @@ public class WarehouseImpl implements Warehouse {
 	 * @see passiveObjects.Warehouse#takeResources(java.util.List)
 	 */
 	@Override
-	public synchronized void getResources(Task task) {		
-		while(!this.resourcesAvailable(task.getNeededResources()) && (!task.isComplete())) // didn't find resources && task not done
+	public synchronized boolean getResources(Task task)  throws InterruptedException {		
+		while(!this.resourcesAvailable(task.getNeededResources()) && (!task.isComplete()) && (!task.isAborted())) // didn't find resources && task not done
 			try {
-				this.wait();
+				this.wait(15000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 			}
-		if (!task.isComplete()) {
+		if (!task.isComplete() && !task.isAborted()) {
 			for (Resource resource : task.getNeededResources())
 				this.map.get(resource.getName()).decAmount();
-		}
+			return true;
+		} else
+			return false;
 	}
 
 	@Override

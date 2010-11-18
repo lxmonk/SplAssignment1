@@ -40,9 +40,10 @@ public class WorkingBoardImplTest {
 	 * Test method for
 	 * {@link passiveObjects.WorkingBoardImpl#getTaskBySpecialty(passiveObjects.WorkerSpecialty)}
 	 * .
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testGetTaskBySpecialty() {
+	public void testGetTaskBySpecialty() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
@@ -54,9 +55,9 @@ public class WorkingBoardImplTest {
 		List<Resource> resources = null;
 		Task task = new TaskImpl(randStr+"aaa", managerSpecialization, workerSpecialty, size,
 				resources);
-		workingBoard.postTask(task);
-		assertEquals(task, workingBoard.getTaskBySpecialty(workerSpecialty));
-		assertEquals(null, workingBoard
+		this.workingBoard.postTask(task, null);
+		assertEquals(task, this.workingBoard.getTaskBySpecialty(workerSpecialty));
+		assertEquals(null, this.workingBoard
 				.getTaskBySpecialty(falseWorkerSpecialty));
 
 	}
@@ -64,9 +65,10 @@ public class WorkingBoardImplTest {
 	/**
 	 * Test method for
 	 * {@link passiveObjects.WorkingBoardImpl#postTask(passiveObjects.Task)}.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testPostTask() {
+	public void testPostTask() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
@@ -76,19 +78,20 @@ public class WorkingBoardImplTest {
 		List<Resource> resources = null;
 		Task task = new TaskImpl(randStr2+"jj", managerSpecialization, workerSpecialty, size,
 				resources);
-		workingBoard.postTask(task);
-		assertEquals(task, workingBoard.findTask(task));
+		workingBoard.postTask(task,null);
+		assertEquals(true, workingBoard.findTask(task));
 		Task falseTask = new TaskImpl(randStr2 ,managerSpecialization, workerSpecialty, size,
 				resources);
-		assertEquals(null, workingBoard.findTask(falseTask));
+		assertEquals(false, workingBoard.findTask(falseTask));
 	}
 
 	/**
 	 * Test method for
 	 * {@link passiveObjects.WorkingBoardImpl#removeTask(passiveObjects.Task)}.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testRemoveTask() {
+	public void testRemoveTask() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		WorkerSpecialty workerSpecialty = new WorkerSpecialty(randStr);
@@ -98,7 +101,7 @@ public class WorkingBoardImplTest {
 		List<Resource> resources = null;
 		Task task = new TaskImpl(randStr+"999", managerSpecialization, workerSpecialty, size,
 				resources);
-		workingBoard.postTask(task);
+		workingBoard.postTask(task,null);
 		assertEquals(task, workingBoard.findTask(task));
 		workingBoard.removeTask(task);
 		assertEquals(null, workingBoard.findTask(task));

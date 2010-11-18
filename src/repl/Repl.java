@@ -186,7 +186,8 @@ public class Repl {
 			}
 			int workHours = Integer.parseInt(vec.elementAt(2));
 			Worker worker = new Worker(name, workHours, specs,
-					Repl.workingBoard, Repl.warehouse, Repl.logger);
+					Repl.workingBoard, Repl.warehouse);
+			worker.setLogger(Repl.logger);
 			Repl.workersList.add(worker);
 			Repl.workers.put(worker.getName(), worker);
 			Repl.logger.info(worker.getName() + "started working at "

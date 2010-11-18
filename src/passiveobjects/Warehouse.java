@@ -32,8 +32,9 @@ public interface Warehouse {
 	 *       warehouse.
 	 * @param task
 	 *            the task we need the resources for
+	 * @return if we took the resources or not 
 	 */
-	public void getResources(Task task);
+	public boolean getResources(Task task) throws InterruptedException ;
 
 	/**
 	 * @post the resources in resourceList are added back to the inventory in

@@ -26,7 +26,8 @@ public class TaskImpl implements Task {
 	volatile int hoursNeeded;
 	final List<Resource> resources;
 	List<Worker> workers;
-	boolean complete;
+	volatile boolean complete;
+	volatile boolean aborted;
 
 	/**
 	 * a new task constructor
@@ -55,6 +56,7 @@ public class TaskImpl implements Task {
 		this.resources = resourcesList;
 		this.workers = new CopyOnWriteArrayList<Worker>();
 		this.complete=false;
+		this.aborted=false;
 		
 	}
 
@@ -119,13 +121,13 @@ public class TaskImpl implements Task {
 
 	@Override
 	public void taskIsDone() {
+		this.complete=true;
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public synchronized int signInWorker(Worker worker) {
-		this.complete=true;
 		int workHours = worker.getWorkHours();
 		int shortShift=0;
 		if (this.hoursNeeded >= workHours)
@@ -156,5 +158,27 @@ public class TaskImpl implements Task {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public synchronized void work(int workHours) {
+		try {
+			this.wait(workHours*1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+		}
+		this.incrementHoursDone(workHours);
+		if (this.hoursDone == this.size) this.taskIsDone();  
+	}
+
+	@Override
+	public void abortTask() {
+		this.aborted=true;
+		
+	}
+
+	@Override
+	public boolean isAborted() {
+		return this.aborted;
 	}
 }
