@@ -113,4 +113,14 @@ public class Worker implements Runnable {
 		}				
 	}
 
+	public Task getCurrentTask() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getWorkerResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

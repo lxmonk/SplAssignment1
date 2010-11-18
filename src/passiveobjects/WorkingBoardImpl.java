@@ -3,6 +3,8 @@
  */
 package passiveobjects;
 
+import acitiveobjects.Manager;
+
 /**
  * @author lxmonk
  *
@@ -24,7 +26,7 @@ public class WorkingBoardImpl implements WorkingBoard {
 	 * @see passiveObjects.WorkingBoard#postTask(passiveObjects.Task)
 	 */
 	@Override
-	public void postTask(Task task) {
+	public void postTask(Task task, Manager manager) throws InterruptedException {
 		// TODO Auto-generated method stub
 		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
 	}

@@ -3,17 +3,25 @@
  */
 package repl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Logger;
 
+import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.Project;
 import passiveobjects.ProjectBox;
+import passiveobjects.ProjectImpl;
 import passiveobjects.Task;
+import passiveobjects.Warehouse;
+import passiveobjects.WorkerSpecialty;
 import passiveobjects.WorkingBoard;
 import acitiveobjects.Worker;
 
@@ -26,7 +34,12 @@ public class Repl {
 	static Map<Project, Project> executingProjects;
 	static ManagerBoard managerBoard;
 	static List<Project> completedProjectsList;
+	static Map<String, ProjectImpl> projects;
 	static WorkingBoard workingBoard;
+	static Logger logger;
+	static Map<String, Worker> workers;
+	private static List<Worker> workersList;
+	private static Warehouse warehouse;
 	static final Scanner SC = new Scanner(System.in);
 
 	/**
@@ -38,15 +51,20 @@ public class Repl {
 	 *            the {@link ManagerBoard}
 	 * @param theCompletedProjectsList
 	 *            the {@link List} of completed {@link Project}s
-	 * @param theWorkingBoard
-	 *            the {@link WorkingBoard}
+	 * @param projectsMap
+	 *            the set of {@link Project}s.
+	 * @param aWarehouse
+	 *            a {@link Warehouse}.
 	 */
 	public Repl(Map<Project, Project> executingProjectsRef,
 			ManagerBoard theManagerBoard,
-			List<Project> theCompletedProjectsList, WorkingBoard theWorkingBoard) {
+			List<Project> theCompletedProjectsList,
+			Map<String, ProjectImpl> projectsMap, Warehouse aWarehouse) {
 		Repl.executingProjects = executingProjectsRef;
 		Repl.commands = new HashSet<String>();
 		Repl.completedProjectsList = theCompletedProjectsList;
+		Repl.projects = projectsMap;
+		Repl.warehouse = aWarehouse;
 		for (String s : new String[] { "currentProjects", "pendingProjects",
 				"completedProjects", "abortProjcet", "project", "workers",
 				"worker", "addWorker", "departmentManager",
@@ -54,7 +72,31 @@ public class Repl {
 			Repl.commands.add(s);
 		}
 		Repl.managerBoard = theManagerBoard;
-		Repl.workingBoard = theWorkingBoard;
+
+	}
+
+	/**
+	 * set the Logger to aLoger
+	 * 
+	 * @param aLogger
+	 *            a {@link Logger}
+	 */
+	public void setLogger(Logger aLogger) {
+		Repl.logger = aLogger;
+	}
+
+	/**
+	 * set the workers by refi-ing to the workers {@link List}.
+	 * 
+	 * @param aWorkersList
+	 *            the {@link List} of workers.
+	 */
+	public void setWorkers(List<Worker> aWorkersList) {
+		Repl.workersList = aWorkersList;
+		Repl.workers = new HashMap<String, Worker>();
+		for (Worker worker : aWorkersList) {
+			Repl.workers.put(worker.getName(), worker);
+		}
 	}
 
 	/**
@@ -119,6 +161,9 @@ public class Repl {
 	}
 
 	private static void addDepartmentManager(Vector<String> vec) {
+		// String s0 = vec.elementAt(0), s1 = vec.elementAt(1), s2 =
+		// vec.elementAt(2);
+		// System.out.println("0,1,2 = " + s0 + "," + s1 + "" + s2);
 		// TODO Auto-generated method stub
 		System.out.println("addDepartmentManager");
 	}
@@ -129,23 +174,83 @@ public class Repl {
 	}
 
 	private static void addWorker(Vector<String> vec) {
+		if (vec.size() != (1 + 2)) {
+			System.out.println("USAGE: 'addWorker' takes exactly 3 arguments. "
+					+ vec.size() + " given.");
+		} else {
+			String name = vec.elementAt(0);
+			String types = vec.elementAt(1);
+			List<WorkerSpecialty> specs = new ArrayList<WorkerSpecialty>();
+			for (String s : types.replaceAll(" ", "").split(",")) {
+				specs.add(new WorkerSpecialty(s));
+			}
+			int workHours = Integer.parseInt(vec.elementAt(2));
+			Worker worker = new Worker(name, workHours, specs,
+					Repl.workingBoard, Repl.warehouse, Repl.logger);
+			Repl.workersList.add(worker);
+			Repl.workers.put(worker.getName(), worker);
+			Repl.logger.info(worker.getName() + "started working at "
+					+ Helpers.staticTimeNow());
+
+		}
 		// TODO Auto-generated method stub
 
 	}
 
 	private static void worker(Vector<String> vec) {
-		// TODO Auto-generated method stub
-
+		if (vec.size() != 1) {
+			System.out.println("USAGE: 'worker' takes exactly 1 argument. "
+					+ vec.size() + " given.");
+		} else {
+			if (!Repl.workers.containsKey(vec.elementAt(0))) {
+				System.out
+						.println(vec.elementAt(0) + " is not a valid worker!");
+			} else {
+				Worker worker = Repl.workers.get(vec.elementAt(0));
+				String status;
+				if (worker.getCurrentTask() == null)
+					status = "looking for a task";
+				else
+					status = "working on task: "
+							+ worker.getCurrentTask().getName();
+				List<String> resources = worker.getWorkerResources();
+				String ress = "";
+				if (resources != null) {
+					for (String s : resources) {
+						ress += s + " ";
+					}
+				}
+				System.out.println("Current Status: " + status + "\n"
+						+ "Resources: " + ress);
+			}
+		}
 	}
 
 	private static void workers(Vector<String> vec) {
-		// TODO Auto-generated method stub
-
+		if (vec.size() != 0) {
+			System.out.println("USAGE: 'workers' takes exactly 0 arguments. "
+					+ vec.size() + " given.");
+		} else {
+			System.out.println("Workers: "
+					+ Repl.workerArr2Str(Repl.workers.values()));
+		}
 	}
 
 	private static void project(Vector<String> vec) {
-		// TODO Auto-generated method stub
-
+		if (!(vec.size() == 1)) {
+			System.out
+					.println("USAGE: 'completedProjects' takes exactly 1 argument. "
+							+ vec.size() + " given.");
+		} else {
+			if (!Repl.projects.containsKey(vec.elementAt(0))) {
+				System.out.println(vec.elementAt(0)
+						+ " is not a valid project!");
+			} else {
+				ProjectImpl project = Repl.projects.get(vec.elementAt(0));
+				// TODO: complete this function
+			}
+		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void abortProjcet(Vector<String> vec) {
@@ -159,19 +264,15 @@ public class Repl {
 					.println("USAGE: 'completedProjects' takes exactly 0 arguments. "
 							+ vec.size() + " given.");
 		} else {
-			for (Project project : completedProjectsList) {
-				System.out.println("Project: "
-						+ project.getName()
-						+ ".\n"
-						+ "Hours worked: "
-						+ project.getTotalHours()
-						+ ".\n"
+			for (Project project : Repl.completedProjectsList) {
+				System.out.println("Project: " + project.getName() + ".\n"
+						+ "Hours worked: " + project.getTotalHours() + ".\n"
 						+ "Completed Tasks: "
-						+ Repl.taskArr2Str(project.getCompletedTasks())
-						+ "\n"
+						+ Repl.taskArr2Str(project.getCompletedTasks()) + "\n"
 						+ "Last Manager was: " + project.getManagerName());
 			}
 		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 
 	}
 
@@ -190,7 +291,7 @@ public class Repl {
 							+ "\n" + "Next Task: "
 							+ project.getNextTask().getName());
 				}
-
+				Repl.nextCommand(Repl.commands, Repl.SC);
 			}
 		}
 
@@ -225,16 +326,16 @@ public class Repl {
 		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
-	private static String workerArr2Str(List<Worker> workers) {
-		if (workers.size() == 0) {
+	private static String workerArr2Str(Collection<Worker> collection) {
+		if (collection.size() == 0) {
 			return "None.";
 		} else {
 			String ret = "";
-			for (Worker worker : workers) {
+			for (Worker worker : collection) {
 				ret += worker.getName() + ", ";
 			}
-			return ret.substring(0, ret.length() - 1); // remove the last comma
-			// (,)
+			return ret.substring(0, ret.length() - 2); // remove the last comma
+			// and space (", ").
 		}
 	}
 
@@ -258,4 +359,5 @@ public class Repl {
 		}
 		return ret;
 	}
+
 }

@@ -88,7 +88,8 @@ public class Init {
 		Vector<String> managerSpecializations = new Vector<String>();
 		Set<WorkerSpecialty> workerSpecialties = new HashSet<WorkerSpecialty>();
 		Set<Resource> resources = new HashSet<Resource>();
-		List<ProjectImpl> projects = new Vector<ProjectImpl>();
+		// List<ProjectImpl> projects = new Vector<ProjectImpl>();
+		Map<String, ProjectImpl> projects = new HashMap<String, ProjectImpl>();
 		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 		Map<String, ProjectBox> initMap = new HashMap<String, ProjectBox>();
 		List<Manager> managers = new Vector<Manager>();
@@ -116,7 +117,8 @@ public class Init {
 				.getProperty("numOfManagerSpecialities")); // Redundant??
 		int numOfWorkerSpecialties = Integer.parseInt(configTxt
 				.getProperty("numOfWorkerSpeciality")); // Redundant??
-		String[] specializations = Init.parseStrArr(configTxt, "ManagerSpecialties");
+		String[] specializations = Init.parseStrArr(configTxt,
+				"ManagerSpecialties");
 		String[] specialties = Init.parseStrArr(configTxt, "workerSpecialties");
 
 		/* create ManagerSpecializations and ProjectBoxes */
@@ -198,7 +200,7 @@ public class Init {
 				taskList.add(task);
 			}
 			ProjectImpl project = new ProjectImpl(pIname, taskList);
-			projects.add(project);
+			projects.put(project.getName(), project);
 		}
 
 		/* populate the boards */
@@ -206,7 +208,7 @@ public class Init {
 			warehouse.addResource(resource);
 		}
 		managerBoard.createProjectsMap(initMap);
-		for (ProjectImpl project : projects) {
+		for (ProjectImpl project : projects.values()) {
 			ManagerSpecialization ms = project.getNextManagerSpecializtion();
 			if (!managerSpecializations.contains(ms.getSpecialization())) {
 				logger.severe(ms.getSpecialization()
@@ -222,7 +224,10 @@ public class Init {
 			}
 		}
 		/* create the observer */
-		Repl observer = new Repl(executingProjects, managerBoard, completedProjects, workingBoard);
+		Repl observer = new Repl(executingProjects, managerBoard,
+				completedProjects, projects, warehouse);
+		observer.setLogger(logger);
+		observer.setWorkers(workers);
 
 		ExecutorService mangersExecutorService = Executors
 				.newCachedThreadPool();
@@ -236,6 +241,7 @@ public class Init {
 //
 //		for (Manager manager : managers)
 //			mangersExecutorService.execute(manager);
+//		
 
 	}
 

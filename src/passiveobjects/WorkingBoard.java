@@ -1,5 +1,7 @@
 package passiveobjects;
 
+import acitiveobjects.Manager;
+
 public interface WorkingBoard {
 	
 	/**
@@ -7,8 +9,9 @@ public interface WorkingBoard {
 	 * @pre none.
 	 * @post the task is added to the WorkingBoard
 	 * @param task to be added to the WorkingBoard
+	 * @param manager the {@link Manager} who posted this task.
 	 */
-	public void postTask(Task task);
+	public void postTask(Task task, Manager manager) throws InterruptedException;
 	
 	/**
 	 * return a task by the stated specialty
