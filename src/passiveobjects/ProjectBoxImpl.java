@@ -66,6 +66,15 @@ public class ProjectBoxImpl implements ProjectBox {
 		}
 		return this.projectQueue.poll();
 	}
+	
+	@Override
+	public synchronized Project getProject(Project project) {
+		if (this.projectQueue.remove(project)) {
+			return project;
+		} else {
+			return null;
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

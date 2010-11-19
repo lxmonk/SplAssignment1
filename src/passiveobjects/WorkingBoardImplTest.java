@@ -20,6 +20,7 @@ import acitiveobjects.Manager;
  */
 public class WorkingBoardImplTest {
 	WorkingBoardImpl workingBoard;
+	int CONST = 100;
 
 	/**
 	 * @throws java.lang.Exception
@@ -51,7 +52,7 @@ public class WorkingBoardImplTest {
 				+ "2");
 		ManagerSpecialization managerSpecialization = new ManagerSpecialization(
 				randStr2);
-		int size = (int) Math.round(Math.random() * 100) + 1;
+		int size = (int) Math.round(Math.random() * this.CONST) + 1;
 		List<Resource> resources = null;
 		Task task = new TaskImpl(randStr+"aaa", managerSpecialization, workerSpecialty, size,
 				resources);

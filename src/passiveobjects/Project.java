@@ -101,4 +101,10 @@ public interface Project {
 	 * abort this {@link Project}.
 	 */
 	public void abortProject();
+	
+	/**
+	 * return a boolean stating whether this project has been aborted.
+	 * @return a boolean stating whether this project has been aborted.
+	 */
+	public boolean isAborted();
 }

@@ -20,6 +20,7 @@ public class ProjectImpl implements Project {
 	List<Task> completedTasks;
 	Manager lastManager; //should there be also current manager?
 	int totalHours;
+	volatile boolean isAborted;
 	
 	
 	/**
@@ -36,6 +37,7 @@ public class ProjectImpl implements Project {
 		this.completedTasks = new Vector<Task>();
 		this.lastManager = null;
 		this.totalHours = 0;
+		this.isAborted = false;
 	}
 
 	/* (non-Javadoc)
@@ -129,7 +131,8 @@ public class ProjectImpl implements Project {
 	}
 	@Override
 	public void abortProject(){
-		this.getManager().interrupt();
+		this.isAborted = true;
+//		this.getManager().interrupt();
 	}
 
 
@@ -162,6 +165,11 @@ public class ProjectImpl implements Project {
 	public void setManager(Manager manager) {
 		this.lastManager = manager;
 		
+	}
+
+	@Override
+	public boolean isAborted() {
+		return this.isAborted;
 	}
 
 }

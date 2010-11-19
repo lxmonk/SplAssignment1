@@ -89,11 +89,10 @@ public class Init {
 		Set<Resource> resources = new HashSet<Resource>();
 		Map<String, ProjectImpl> projects = new HashMap<String, ProjectImpl>();
 		Map<String, ProjectBox> initMap = new HashMap<String, ProjectBox>();
-		List<Manager> managers = new Vector<Manager>();
+		Map<String, Manager> managers = new HashMap<String, Manager>();
 		List<Worker> workers = new Vector<Worker>();
 
 		/* read configuration files */
-
 		Properties configTxt = new Properties();
 		Properties projectsTxt = new Properties();
 		try {
@@ -149,7 +148,7 @@ public class Init {
 			manager.setWorkingBoard(workingBoard);
 			logger.info(manager.getName() + " started working at "
 					+ Helpers.staticTimeNow());
-			managers.add(manager);
+			managers.put(manager.getName(), manager);
 		}
 
 		/* create workers */
@@ -222,6 +221,7 @@ public class Init {
 		Repl observer = new Repl(executingProjects, managerBoard,
 				completedProjects, projects, warehouse);
 		observer.setLogger(logger);
+		observer.setManagers(managers);
 		observer.setWorkers(workers);
 
 		ExecutorService mangersExecutorService = Executors
@@ -232,14 +232,13 @@ public class Init {
 		observer.setManagersExecutorService(mangersExecutorService);
 		observer.setWorkersExecutorService(workersExecutorService);
 
-		for (Manager manager : managers) {
+		for (Manager manager : managers.values()) {
 			mangersExecutorService.execute(manager);
 		}
-		
+
 		for (Worker worker : workers) {
 			workersExecutorService.execute(worker);
 		}
-
 
 		observer.start();
 

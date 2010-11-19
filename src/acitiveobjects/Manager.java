@@ -105,46 +105,69 @@ public class Manager implements Runnable {
 		try {
 			while (!Thread.interrupted()) {
 				this.currentProject = this.projectBox.getProject();
-				Task currentTask = this.currentProject.getNextTask();
-				this.currentProject.setManager(this);
-				this.executingProjects.put(this.currentProject,
-						this.currentProject);
-				this.logger.info(this.name + " publishes task "
-						+ currentTask.getName() + " of project "
-						+ this.currentProject.getName() + " at "
-						+ Helpers.staticTimeNow());
-				this.workingBoard.postTask(currentTask, this);
-				// will wait until completion - according to postTask method.
-				this.workingBoard.removeTask(currentTask);
-				this.logger.info(this.name + " completed task "
-						+ currentTask.getName() + " of project "
-						+ this.currentProject.getName() + " at "
-						+ Helpers.staticTimeNow());
-				this.executingProjects.remove(this.currentProject);
-				this.currentProject.removeTask(currentTask);
-				this.currentProject.updateTotalHours(currentTask.getSize());
-				this.currentProject.getCompletedTasks().add(currentTask);
-				Task nextTask = this.currentProject.getNextTask();
-				ManagerSpecialization nextManagerSpecialization = null;
-				if (nextTask == null) { // the project is done
-					this.logger.info(this.name + " completed project "
+				if (!this.currentProject.isAborted()) {
+					Task currentTask = this.currentProject.getNextTask();
+					this.currentProject.setManager(this);
+					this.executingProjects.put(this.currentProject,
+							this.currentProject);
+					this.logger.info(this.name + " publishes task "
+							+ currentTask.getName() + " of project "
 							+ this.currentProject.getName() + " at "
 							+ Helpers.staticTimeNow());
-					this.completedProjects.add(this.currentProject);
-				} else { // the project is not done yet
-					nextManagerSpecialization = nextTask
-							.getManagerSpecializtion();
-					if (!Thread.interrupted()) {
-						ProjectBox retrunProjectBox = this.managerBoard
-								.getProjectBox(nextManagerSpecialization);
-						retrunProjectBox.addProject(this.currentProject);
+					if (!this.currentProject.isAborted()) {
+						this.workingBoard.postTask(currentTask, this);
+						// will wait until completion - according to postTask
+						// method.
+						this.workingBoard.removeTask(currentTask);
+					}
+					if (!this.currentProject.isAborted()) {
+						this.logger.info(this.name + " completed task "
+								+ currentTask.getName() + " of project "
+								+ this.currentProject.getName() + " at "
+								+ Helpers.staticTimeNow());
+					}
+					this.executingProjects.remove(this.currentProject);
+					if (!this.currentProject.isAborted()) {
+						this.currentProject.removeTask(currentTask);
+						this.currentProject.updateTotalHours(currentTask
+								.getSize());
+						this.currentProject.getCompletedTasks()
+								.add(currentTask);
+						Task nextTask = this.currentProject.getNextTask();
+						ManagerSpecialization nextManagerSpecialization = null;
+						if (nextTask == null) { // the project is done
+							this.logger.info(this.name + " completed project "
+									+ this.currentProject.getName() + " at "
+									+ Helpers.staticTimeNow());
+							this.completedProjects.add(this.currentProject);
+						} else { // the project is not done yet
+							nextManagerSpecialization = nextTask
+									.getManagerSpecializtion();
+							if (!this.currentProject.isAborted()) {
+								ProjectBox retrunProjectBox = this.managerBoard
+										.getProjectBox(nextManagerSpecialization);
+								retrunProjectBox
+										.addProject(this.currentProject);
+							}
+						}
 					}
 				}
+				this.currentProject = null;
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
+	}
+
+	/**
+	 * return the project this {@link Manager} is currently working on, or null
+	 * if none.
+	 * 
+	 * @return the project this {@link Manager} is currently working on, or null
+	 *         if none.
+	 */
+	public Project getCurrentProject() {
+		return this.currentProject;
 	}
 
 	/**

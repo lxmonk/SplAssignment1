@@ -13,7 +13,8 @@ public interface ProjectBox {
 	 * @post none
 	 * 
 	 * @return a project from the box.
-	 * @throws InterruptedException in case a general 'stop' is called.
+	 * @throws InterruptedException
+	 *             in case a general 'stop' is called.
 	 */
 	public Project getProject() throws InterruptedException;
 
@@ -59,5 +60,15 @@ public interface ProjectBox {
 	 *         {@link ProjectBox}
 	 */
 	public Collection<Project> getAllProjects();
+
+	/**
+	 * get a <b>specific</b> project
+	 * 
+	 * @param project
+	 *            the {@link Project} to get.
+	 * @return the {@link Project}, or null if not there.
+	 */
+	public Project getProject(Project project);
+	
 
 }

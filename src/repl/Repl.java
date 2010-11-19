@@ -15,8 +15,11 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
+import passiveobjects.ManagerSpecialization;
 import passiveobjects.Project;
 import passiveobjects.ProjectBox;
 import passiveobjects.ProjectImpl;
@@ -25,6 +28,7 @@ import passiveobjects.Task;
 import passiveobjects.Warehouse;
 import passiveobjects.WorkerSpecialty;
 import passiveobjects.WorkingBoard;
+import acitiveobjects.Manager;
 import acitiveobjects.Worker;
 
 /**
@@ -44,6 +48,8 @@ public class Repl {
 	private static Warehouse warehouse;
 	private static ExecutorService workersExecutorService;
 	private static ExecutorService managersExecutorService;
+	private static Map<String, Manager> managers;
+
 	static final Scanner SC = new Scanner(System.in);
 
 	/**
@@ -71,7 +77,7 @@ public class Repl {
 		Repl.warehouse = aWarehouse;
 		Repl.managerBoard = theManagerBoard;
 		for (String s : new String[] { "currentProjects", "pendingProjects",
-				"completedProjects", "abortProjcet", "project", "workers",
+				"completedProjects", "abortProject", "project", "workers",
 				"worker", "addWorker", "departmentManager",
 				"addDepartmentManager", "stop", "help" }) {
 			Repl.commands.add(s);
@@ -104,6 +110,16 @@ public class Repl {
 	}
 
 	/**
+	 * introduces the managers to the Repl
+	 * 
+	 * @param theManagers
+	 *            the managers to set
+	 */
+	public void setManagers(Map<String, Manager> theManagers) {
+		Repl.managers = theManagers;
+	}
+
+	/**
 	 * @param theWorkersExecutorService
 	 *            the workersExecutorService to set
 	 */
@@ -130,7 +146,7 @@ public class Repl {
 	}
 
 	private static void nextCommand(Set<String> commandsSet, Scanner sc) {
-		System.out.println("What would you like to do?");
+		System.out.format("%nWhat would you like to do?%n");
 		String in = sc.next();
 		if (commandsSet.contains(in)) {
 			if (in.equals("currentProjects")) {
@@ -139,8 +155,8 @@ public class Repl {
 				Repl.pendingProjects(Repl.vec(sc));
 			} else if (in.equals("completedProjects")) {
 				Repl.completedProjects(Repl.vec(sc));
-			} else if (in.equals("abortProjcet")) {
-				Repl.abortProjcet(Repl.vec(sc));
+			} else if (in.equals("abortProject")) {
+				Repl.abortProject(Repl.vec(sc));
 			} else if (in.equals("project")) {
 				Repl.project(Repl.vec(sc));
 			} else if (in.equals("workers")) {
@@ -170,29 +186,76 @@ public class Repl {
 	private static void help() {
 		System.out.println("the available commands are:");
 		System.out.println("currentProjects, pendingProjects,"
-				+ "completedProjects, abortProjcet, project, workers,"
+				+ "completedProjects, abortProject, project, workers,"
 				+ "worker, addWorker, departmentManager,"
 				+ "addDepartmentManager, stop, help");
 
 	}
 
 	private static void stop() {
-		// TODO Auto-generated method stub
-		return;
+		try {
+			Repl.logger.fine("stopping everythind");
+			Repl.workersExecutorService.shutdownNow();
+			Repl.managersExecutorService.shutdownNow();
+		} catch (Exception e) {
+			// do nothig!!
+		}
 
 	}
 
 	private static void addDepartmentManager(Vector<String> vec) {
-		// String s0 = vec.elementAt(0), s1 = vec.elementAt(1), s2 =
-		// vec.elementAt(2);
-		// System.out.println("0,1,2 = " + s0 + "," + s1 + "" + s2);
-		// TODO Auto-generated method stub
-		System.out.println("addDepartmentManager");
+		if (vec.size() != 2) {
+			System.out.println("USAGE: 'addDepartmentManager' takes exactly 2 "
+					+ "arguments. " + vec.size() + " given.");
+		} else {
+			Manager manager = new Manager(vec.elementAt(0),
+					new ManagerSpecialization(vec.elementAt(1)),
+					Repl.managerBoard, Repl.completedProjectsList,
+					Repl.executingProjects);
+			manager.setLogger(Repl.logger);
+			manager.setWorkingBoard(Repl.workingBoard);
+			Repl.logger.info(manager.getName() + " started working at "
+					+ Helpers.staticTimeNow());
+			Repl.managers.put(manager.getName(), manager);
+			Repl.managersExecutorService.execute(manager);
+		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void departmentManager(Vector<String> vec) {
-		// TODO Auto-generated method stub
+		if (vec.size() != 1) {
+			System.out
+					.println("USAGE: 'departmentManager' takes exactly 1 argument. "
+							+ vec.size() + " given.");
+		} else {
+			if (!Repl.managers.containsKey(vec.elementAt(0))) {
+				System.out.println(vec.elementAt(0)
+						+ " is not a valid manager!");
+			} else {
+				Manager manager = Repl.managers.get(vec.elementAt(0));
+				Project currentProject = manager.getCurrentProject();
+				String projectName;
+				if (currentProject == null) {
+					System.out.println("Current Project: None.");
+					Repl.nextCommand(Repl.commands, Repl.SC);
+					return;
+				}
+				projectName = currentProject.getName();
+				System.out.println("Current Project: " + projectName + ".");
+				Task curTask = currentProject.getNextTask();
+				System.out.println("Current Task Info: ");
+				System.out.println("\tworkers: ");
+				for (Worker w : curTask.getWorkers()) {
+					System.out.print(w.getName() + " ");
+				}
+				System.out.println("\tAmount of work still needed: "
+						+ curTask.getHoursStillNeeded() + " hours.");
+				System.out.println("\tTotal Work for this Task: "
+						+ curTask.getSize() + " hours.");
 
+			}
+		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void addWorker(Vector<String> vec) {
@@ -248,6 +311,7 @@ public class Repl {
 						+ "Resources: " + ress);
 			}
 		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void workers(Vector<String> vec) {
@@ -256,14 +320,14 @@ public class Repl {
 			System.out.println("USAGE: 'workers' takes exactly 0 arguments. "
 					+ vecSize + " given.");
 		} else {
-			System.out.println("here");// FIXME: DLETE!
 			System.out.println("Workers: "
 					+ Repl.workerArr2Str(Repl.workers.values()));
 		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void project(Vector<String> vec) {
-		if (!(vec.size() == 1)) {
+		if (vec.size() != 1) {
 			System.out.println("USAGE: 'project' takes exactly 1 argument. "
 					+ vec.size() + " given.");
 		} else {
@@ -295,9 +359,31 @@ public class Repl {
 		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
-	private static void abortProjcet(Vector<String> vec) {
-		// TODO Auto-generated method stub
-
+	private static void abortProject(Vector<String> vec) {
+		if (vec.size() != 1) {
+			System.out
+					.println("USAGE: 'abortProject' takes exactly 1 argument. "
+							+ vec.size() + " given.");
+		} else {
+			if (!Repl.projects.containsKey(vec.elementAt(0))) {
+				System.out.println(vec.elementAt(0)
+						+ " is not a valid project!");
+			} else {
+				ProjectImpl project = Repl.projects.get(vec.elementAt(0));
+				if (Repl.executingProjects.containsKey(project)) {
+					// someone is working on this project
+					Task task = project.getNextTask();
+					task.abortTask();
+					project.abortProject();
+					task.notifyAll();
+				} else { // the project is pending
+					Repl.managerBoard.getProjectBox(
+							project.getNextManagerSpecializtion()).getProject(
+							project);
+				}
+			}
+		}
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void completedProjects(Vector<String> vec) {
@@ -315,7 +401,6 @@ public class Repl {
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);
-
 	}
 
 	private static void pendingProjects(Vector<String> vec) {
@@ -333,10 +418,9 @@ public class Repl {
 							+ "\n" + "Next Task: "
 							+ project.getNextTask().getName());
 				}
-				Repl.nextCommand(Repl.commands, Repl.SC);
 			}
 		}
-
+		Repl.nextCommand(Repl.commands, Repl.SC);
 	}
 
 	private static void currentProjects(Vector<String> vec) {
@@ -357,10 +441,12 @@ public class Repl {
 						+ Repl.taskArr2Str(project.getCompletedTasks())
 						+ "\n"
 						+ "Current Task has "
-						+ +project.getNextTask().getHoursDone()
-						+ "hours done.\n"
+						+project.getNextTask().getHoursDone()
+						+ " hours done.\n"
 						+ "Current Workers are: "
-						+ Repl.workerArr2Str(project.getNextTask().getWorkers()) + ".");
+						+ Repl
+								.workerArr2Str(project.getNextTask()
+										.getWorkers()) + ".");
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);
