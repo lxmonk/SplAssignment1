@@ -13,8 +13,9 @@ public interface ProjectBox {
 	 * @post none
 	 * 
 	 * @return a project from the box.
+	 * @throws InterruptedException in case a general 'stop' is called.
 	 */
-	public Project getProject();
+	public Project getProject() throws InterruptedException;
 
 	/**
 	 * add a project to the {@link ProjectBox}.

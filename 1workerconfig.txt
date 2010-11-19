@@ -1,0 +1,44 @@
+numOfManagerSpecialities=4
+ManagerSpecialties=chassis, design, machinery, electricity
+
+numOfWorkerSpeciality=6
+workerSpecialties=painter, weaver, mechanic, welder, blacksmith, electrician
+
+numOfManagers=6
+manager0Name=David
+manager0Specialty=chassis
+manager1Name=Ben
+manager1Specialty=design
+manager2Name=Jerry
+manager2Specialty=design
+manager3Name=Beth
+manager3Specialty=machinery
+manager4Name=John
+manager4Specialty=electricity
+manager5Name=Charles
+manager5Specialty=electricity
+
+numOfWorkers=1
+worker0Name=Andy
+worker0WorkHours=6
+worker0specialties=painter, weaver
+
+numOfResources=9
+resource0Name=paint_gun
+resource0Amount=2
+resource1Name=paintBrush
+resource1Amount=3
+resource2Name=engine
+resource2Amount=3
+resource3Name=battery
+resource3Amount=2
+resource4Name=radiator
+resource4Amount=4
+resource5Name=electrical_wire
+resource5Amount=8
+resource6Name=screwdriver
+resource6Amount=3
+resource7Name=hammer
+resource7Amount=5
+resource8Name=steel
+resource8Amount=4

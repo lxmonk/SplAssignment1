@@ -55,7 +55,7 @@ public class ProjectBoxImpl implements ProjectBox {
 	 * @see passiveobjects.ProjectBox#getProject()
 	 */
 	@Override
-	public synchronized Project getProject() {
+	public synchronized Project getProject() throws InterruptedException{
 		while (this.projectQueue.isEmpty()) {
 			try {
 				this.wait();

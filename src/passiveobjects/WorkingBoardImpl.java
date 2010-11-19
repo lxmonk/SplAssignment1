@@ -32,7 +32,9 @@ public class WorkingBoardImpl implements WorkingBoard {
 	 */
 	@Override
 	public Task getTaskBySpecialty(WorkerSpecialty specialty) {
-		Task task =  this.workingBoard.get(specialty).poll();
+		Queue<Task> temp = this.workingBoard.get(specialty);
+		if (temp == null) return null;
+		Task task =  temp.poll();
 		this.workingBoard.get(specialty).add(task);
 		if (task.getHoursStillNeeded() <= 0) {
 			task =  this.workingBoard.get(specialty).poll();
@@ -49,10 +51,14 @@ public class WorkingBoardImpl implements WorkingBoard {
 	public void postTask(Task task,Manager manager) throws InterruptedException {
 		task.setManager(manager);
 		Queue<Task> specialtyList=this.workingBoard.get(task.getWorkerSpecialty()); 	
-		if (specialtyList == null)
+		if (specialtyList == null) {
 			specialtyList = new ConcurrentLinkedQueue<Task>();
+			this.workingBoard.put(task.getWorkerSpecialty(),specialtyList);
+			System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
+		}
 		specialtyList.add(task);
-		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
+		System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
+//		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
 	}
 
 	/* (non-Javadoc)

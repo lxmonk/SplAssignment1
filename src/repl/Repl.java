@@ -69,13 +69,13 @@ public class Repl {
 		Repl.completedProjectsList = theCompletedProjectsList;
 		Repl.projects = projectsMap;
 		Repl.warehouse = aWarehouse;
+		Repl.managerBoard = theManagerBoard;
 		for (String s : new String[] { "currentProjects", "pendingProjects",
 				"completedProjects", "abortProjcet", "project", "workers",
 				"worker", "addWorker", "departmentManager",
 				"addDepartmentManager", "stop", "help" }) {
 			Repl.commands.add(s);
 		}
-		Repl.managerBoard = theManagerBoard;
 
 	}
 
@@ -104,7 +104,8 @@ public class Repl {
 	}
 
 	/**
-	 * @param theWorkersExecutorService the workersExecutorService to set
+	 * @param theWorkersExecutorService
+	 *            the workersExecutorService to set
 	 */
 	public void setWorkersExecutorService(
 			ExecutorService theWorkersExecutorService) {
@@ -112,7 +113,8 @@ public class Repl {
 	}
 
 	/**
-	 * @param theManagersExecutorService the managersExecutorService to set
+	 * @param theManagersExecutorService
+	 *            the managersExecutorService to set
 	 */
 	public void setManagersExecutorService(
 			ExecutorService theManagersExecutorService) {
@@ -339,7 +341,7 @@ public class Repl {
 
 	private static void currentProjects(Vector<String> vec) {
 
-		if (!(vec.size() == 0)) {
+		if (vec.size() != 0) {
 			System.out
 					.println("USAGE: 'currentProjects' takes exactly 0 arguments. "
 							+ vec.size() + " given.");
@@ -358,9 +360,7 @@ public class Repl {
 						+ +project.getNextTask().getHoursDone()
 						+ "hours done.\n"
 						+ "Current Workers are: "
-						+ Repl
-								.workerArr2Str(project.getNextTask()
-										.getWorkers()) + ".");
+						+ Repl.workerArr2Str(project.getNextTask().getWorkers()) + ".");
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);

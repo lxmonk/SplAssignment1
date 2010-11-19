@@ -147,44 +147,6 @@ public class Manager implements Runnable {
 		}
 	}
 
-	// try {
-	// this.currentProject = this.projectBox.getProject();
-	// Task currentTask = this.currentProject.getNextTask();
-	// this.currentProject.setManager(this);
-	// this.currentProject.removeTask(currentTask);
-	// this.logger.info(this.name + " publishes task "
-	// + currentTask.getName() + " of project "
-	// + this.currentProject.getName() + " at "
-	// + Helpers.staticTimeNow());
-	// this.workingBoard.postTask(currentTask);
-	// // will wait until completion - according to postTask method.
-	// this.workingBoard.removeTask(currentTask);
-	// this.logger.info(this.name + " completed task "
-	// + currentTask.getName() + " of project "
-	// + this.currentProject.getName() + " at "
-	// + Helpers.staticTimeNow());
-	// this.currentProject.updateTotalHours(currentTask.getSize());
-	// this.currentProject.getCompletedTasks().add(currentTask);
-	// Task nextTask = this.currentProject.getNextTask();
-	// ManagerSpecialization nextManagerSpecialization = null;
-	// if (nextTask == null) { // the project is done
-	// this.logger.info(this.name + " completed project "
-	// + this.currentProject.getName() + " at "
-	// + Helpers.staticTimeNow());
-	// this.completedProjects.add(this.currentProject);
-	// break;
-	// } else { // the project is not done yet
-	// nextManagerSpecialization = nextTask
-	// .getManagerSpecializtion();
-	// }
-	// ProjectBox retrunProjectBox = this.managerBoard
-	// .getProjectBox(nextManagerSpecialization);
-	// retrunProjectBox.addProject(this.currentProject);
-	// } catch (InterruptedException ie) {
-	// // TODO: handle exception
-	// ie.printStackTrace();
-	// }
-
 	/**
 	 * interrupt the manager (a project is aborted, for example).
 	 */

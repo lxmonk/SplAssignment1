@@ -3,7 +3,6 @@
  */
 package passiveobjects;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ManagerBoardImpl implements ManagerBoard {
 
 	Map<String, ProjectBox> map;
-//	private List<String> specList;
 
 	/*
 	 * (non-Javadoc)
@@ -46,7 +44,6 @@ public class ManagerBoardImpl implements ManagerBoard {
 	@Override
 	public void createProjectsMap(Map<String, ProjectBox> initMap) {
 		this.map = new ConcurrentHashMap<String, ProjectBox>(initMap);
-
 	}
 
 }

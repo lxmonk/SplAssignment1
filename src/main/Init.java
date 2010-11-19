@@ -5,8 +5,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
@@ -41,7 +38,6 @@ import passiveobjects.WorkingBoard;
 import passiveobjects.WorkingBoardImpl;
 import repl.Repl;
 import acitiveobjects.Manager;
-import acitiveobjects.Observer;
 import acitiveobjects.Worker;
 
 /**
@@ -72,7 +68,6 @@ public class Init {
 		// logger output is written to a file in fh handler
 		fh.setFormatter(new OurFormatter());
 		logger.addHandler(fh);
-		
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
@@ -86,14 +81,13 @@ public class Init {
 		WorkingBoard workingBoard = new WorkingBoardImpl();
 		Warehouse warehouse = new WarehouseImpl();
 		List<Project> completedProjects = new Vector<Project>();
+		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 
 		/* create temporary data structures */
-		Vector<String> managerSpecializations = new Vector<String>();
+		Set<String> managerSpecializations = new HashSet<String>();
 		Set<WorkerSpecialty> workerSpecialties = new HashSet<WorkerSpecialty>();
 		Set<Resource> resources = new HashSet<Resource>();
-		// List<ProjectImpl> projects = new Vector<ProjectImpl>();
 		Map<String, ProjectImpl> projects = new HashMap<String, ProjectImpl>();
-		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 		Map<String, ProjectBox> initMap = new HashMap<String, ProjectBox>();
 		List<Manager> managers = new Vector<Manager>();
 		List<Worker> workers = new Vector<Worker>();
@@ -111,15 +105,12 @@ public class Init {
 			System.exit(-1);
 		}
 
-		// config.parse(args[?])
-		// Init.parse(configTxt, logger); // ???
-
 		/* prepare to create the ProjectBoxes */
 		logger.fine("creating Project Boxes");
-		int numOfManagerSpecializations = Integer.parseInt(configTxt
-				.getProperty("numOfManagerSpecialities")); // Redundant??
-		int numOfWorkerSpecialties = Integer.parseInt(configTxt
-				.getProperty("numOfWorkerSpeciality")); // Redundant??
+		// int numOfManagerSpecializations = Integer.parseInt(configTxt
+		// .getProperty("numOfManagerSpecialities")); // Redundant??
+		// int numOfWorkerSpecialties = Integer.parseInt(configTxt
+		// .getProperty("numOfWorkerSpeciality")); // Redundant??
 		String[] specializations = Init.parseStrArr(configTxt,
 				"ManagerSpecialties");
 		String[] specialties = Init.parseStrArr(configTxt, "workerSpecialties");
@@ -156,8 +147,8 @@ public class Init {
 					completedProjects, executingProjects);
 			manager.setLogger(logger);
 			manager.setWorkingBoard(workingBoard);
-			logger.info(configTxt.getProperty("manager" + si + "Name")
-					+ " started working at " + Helpers.staticTimeNow());
+			logger.info(manager.getName() + " started working at "
+					+ Helpers.staticTimeNow());
 			managers.add(manager);
 		}
 
@@ -176,8 +167,8 @@ public class Init {
 					"worker" + si + "specialties").replaceAll(" ", "").split(
 					",")), workingBoard, warehouse);
 			worker.setLogger(logger);
-			logger.info(configTxt.getProperty("worker" + si + "Name")
-					+ " started working at " + Helpers.staticTimeNow());
+			logger.info(worker.getName() + " started working at "
+					+ Helpers.staticTimeNow());
 			workers.add(worker);
 		}
 
@@ -240,14 +231,17 @@ public class Init {
 
 		observer.setManagersExecutorService(mangersExecutorService);
 		observer.setWorkersExecutorService(workersExecutorService);
-		observer.start();
 
-		// for (Worker worker : workers)
-		// workersExecutorService.execute(worker);
-		//
-		// for (Manager manager : managers)
-		// mangersExecutorService.execute(manager);
-		//		
+		for (Manager manager : managers) {
+			mangersExecutorService.execute(manager);
+		}
+		
+		for (Worker worker : workers) {
+			workersExecutorService.execute(worker);
+		}
+
+
+		observer.start();
 
 	}
 
