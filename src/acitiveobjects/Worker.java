@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import main.Init;
+
 import passiveobjects.Helpers;
 import passiveobjects.Resource;
 import passiveobjects.Task;
@@ -20,8 +22,7 @@ import passiveobjects.WorkingBoard;
  */
 public class Worker implements Runnable {
 
-	static final int SECOND = 1000;
-	static final int SECOND_10 = 10000;
+
 
 	final String name;
 	final int workHours;
@@ -117,7 +118,7 @@ public class Worker implements Runnable {
 	 */
 	public synchronized void workForNothing(int time) {
 		try {
-			this.wait(time * Worker.SECOND);
+			this.wait(time * Init.SECOND);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

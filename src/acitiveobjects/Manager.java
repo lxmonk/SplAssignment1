@@ -5,6 +5,7 @@ package acitiveobjects;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import passiveobjects.Helpers;
@@ -25,7 +26,7 @@ public class Manager implements Runnable {
 	ManagerSpecialization managerSpecializtion;
 	ManagerBoard managerBoard;
 	WorkingBoard workingBoard;
-	List<Project> completedProjects;
+	Set<Project> completedProjects;
 	Map<Project, Project> executingProjects;
 	ProjectBox projectBox;
 	Project currentProject;
@@ -40,18 +41,18 @@ public class Manager implements Runnable {
 	 *            manager's specialization
 	 * @param theManagerBoard
 	 *            the {@link ManagerBoard}
-	 * @param completedProjectsList
+	 * @param completedProjectsSet
 	 *            the {@link List} of completed projects
 	 * @param executingProjectsRef
 	 *            a reference to the set (Map) of projects being executed.
 	 */
 	public Manager(String aName, ManagerSpecialization aManagerSpecialization,
-			ManagerBoard theManagerBoard, List<Project> completedProjectsList,
+			ManagerBoard theManagerBoard, Set<Project> completedProjectsSet,
 			Map<Project, Project> executingProjectsRef) {
 		this.name = aName;
 		this.managerSpecializtion = aManagerSpecialization;
 		this.managerBoard = theManagerBoard;
-		this.completedProjects = completedProjectsList;
+		this.completedProjects = completedProjectsSet;
 		this.executingProjects = executingProjectsRef;
 		this.currentProject = null;
 
@@ -152,6 +153,11 @@ public class Manager implements Runnable {
 							}
 						}
 					}
+				}
+				if (this.currentProject.isAborted()) {
+					this.logger.info(this.getName() + " stops working " +
+							"on project " + this.currentProject.getName() + " at" +
+							Helpers.staticTimeNow());
 				}
 				this.currentProject = null;
 			}

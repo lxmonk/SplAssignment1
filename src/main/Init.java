@@ -46,7 +46,10 @@ import acitiveobjects.Worker;
  * 
  */
 public class Init {
-
+	
+	public static final int SECOND = 1000;
+	public static final int SECOND_10 = 10000;
+	public static final int SECOND_15 = 15000;
 	/**
 	 * String arrays are used only where creating them is easier than populating
 	 * a Vector<String>, in single-threaded mode only, they are never altered
@@ -74,9 +77,9 @@ public class Init {
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.INFO); // FIXME: update this.
+		logger.setLevel(Level.FINEST); // FIXME: update this.
 		java.util.logging.ConsoleHandler ch = new ConsoleHandler();
-		ch.setLevel(Level.SEVERE);
+		ch.setLevel(Level.FINEST);
 		ch.setFormatter(new OurFormatter());
 		logger.addHandler(ch);
 
@@ -88,7 +91,7 @@ public class Init {
 		logger.fine("ManagerBoardImpl created");
 		WorkingBoard workingBoard = new WorkingBoardImpl();
 		Warehouse warehouse = new WarehouseImpl(logger);
-		List<Project> completedProjects = new Vector<Project>();
+		Set<Project> completedProjects = new HashSet<Project>();
 		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 
 		/* create temporary data structures */
@@ -199,6 +202,7 @@ public class Init {
 										+ "Time")), Init.arr2res(projectsTxt
 								.getProperty("p" + si + ts + "Tools")
 								.replaceAll(" ", "").split(",")));
+				task.setLogger(logger);
 				taskList.add(task);
 			}
 			ProjectImpl project = new ProjectImpl(pIname, taskList);

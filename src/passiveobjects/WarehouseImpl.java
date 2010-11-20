@@ -8,13 +8,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import main.Init;
+
 /**
  * @author lxmonk
  *
  */
 public class WarehouseImpl implements Warehouse {
 
-	static final int SECOND_15 = 15000;
+	
 	
 	Map<String,Resource> map;
 	Logger logger;
@@ -76,7 +78,7 @@ public class WarehouseImpl implements Warehouse {
 	public synchronized boolean getResources(Task task,String workerName)  throws InterruptedException {		
 		while(!this.resourcesAvailable(task.getNeededResources()) && (!task.isComplete()) && (!task.isAborted())) // didn't find resources && task not done
 			try {
-				this.wait(WarehouseImpl.SECOND_15); // the worker will always wake up after 15 seconds
+				this.wait(Init.SECOND_15); // the worker will always wake up after 15 seconds
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 			}

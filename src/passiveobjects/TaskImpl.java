@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+import main.Init;
+
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
 
@@ -17,7 +19,6 @@ import acitiveobjects.Worker;
 
 public class TaskImpl implements Task {
 
-	static final int SECOND = 1000;
 
 	final String name;
 	final ManagerSpecialization managerSpecialization;
@@ -50,7 +51,7 @@ public class TaskImpl implements Task {
 	public TaskImpl(String aName, ManagerSpecialization aManagerSpecialization,
 			WorkerSpecialty aWorkerSpecialty, int aSize,
 			List<Resource> resourcesList) {
-		this.name=aName;
+		this.name = aName;
 		this.workerSpecialty = aWorkerSpecialty;
 		this.managerSpecialization = aManagerSpecialization;
 		this.size = aSize;
@@ -58,9 +59,9 @@ public class TaskImpl implements Task {
 		this.hoursDone = 0;
 		this.resources = resourcesList;
 		this.workers = new CopyOnWriteArrayList<Worker>();
-		this.complete=false;
-		this.aborted=false;
-		
+		this.complete = false;
+		this.aborted = false;
+
 	}
 
 	@Override
@@ -124,19 +125,21 @@ public class TaskImpl implements Task {
 
 	@Override
 	public void taskIsDone(String workerName) {
-		this.complete=true;
-		this.logger.info(workerName+" completed task "+ this.name+ " of "+this.getProjectName()+" at "+ Helpers.staticTimeNow());
+		this.complete = true;
+		this.logger.info(workerName + " completed task " + this.name + " of "
+				+ this.getProjectName() + " at " + Helpers.staticTimeNow());
 		this.notifyAll();
 	}
 
 	@Override
 	public synchronized int signInWorker(Worker worker) {
 		int workHours = worker.getWorkHours();
-		int shortShift=0;
+		int shortShift = 0;
 		if (this.hoursNeeded >= workHours)
-			this.decreaseHoursStillNeeded(workHours); 
-		else { 
-			shortShift = this.hoursNeeded; // Task will complete in the middle of the worker's workHours
+			this.decreaseHoursStillNeeded(workHours);
+		else {
+			shortShift = this.hoursNeeded; // Task will complete in the middle
+											// of the worker's workHours
 			this.decreaseHoursStillNeeded(shortShift);
 		}
 		this.workers.add(worker);
@@ -145,7 +148,7 @@ public class TaskImpl implements Task {
 
 	@Override
 	public synchronized void incrementHoursDone(int hours) {
-		this.hoursDone+=hours;
+		this.hoursDone += hours;
 	}
 
 	@Override
@@ -164,21 +167,22 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized void work(int workHours,String workerName) {
+	public synchronized void work(int workHours, String workerName) {
 		try {
-			this.wait(workHours*(TaskImpl.SECOND));
+			this.wait(workHours * (Init.SECOND));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 		this.incrementHoursDone(workHours);
-		if ((this.hoursDone == this.size) && (!this.isAborted())) this.taskIsDone(workerName);  
+		if ((this.hoursDone == this.size) && (!this.isAborted()))
+			this.taskIsDone(workerName);
 	}
 
 	@Override
-	public void abortTask() {
-		this.aborted=true;
+	public synchronized void abortTask() {
+		this.aborted = true;
+		this.notifyAll();
 	}
-
 
 	@Override
 	public boolean isAborted() {
@@ -192,11 +196,11 @@ public class TaskImpl implements Task {
 
 	@Override
 	public String getProjectName() {
-		return this.manager.getCurrentProject().getName(); 
+		return this.manager.getCurrentProject().getName();
 	}
 
 	@Override
 	public void setLogger(Logger aLogger) {
-		this.logger=aLogger;
+		this.logger = aLogger;
 	}
 }

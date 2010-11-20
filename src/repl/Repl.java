@@ -37,7 +37,7 @@ public class Repl {
 	static private Set<String> commands;
 	static Map<Project, Project> executingProjects;
 	static ManagerBoard managerBoard;
-	static List<Project> completedProjectsList;
+	static Set<Project> completedProjectsSet;
 	static Map<String, ProjectImpl> projects;
 	static WorkingBoard workingBoard;
 	static Logger logger;
@@ -57,7 +57,7 @@ public class Repl {
 	 *            a reference to the executing {@link Project}s data structure.
 	 * @param theManagerBoard
 	 *            the {@link ManagerBoard}
-	 * @param theCompletedProjectsList
+	 * @param completedProjects
 	 *            the {@link List} of completed {@link Project}s
 	 * @param projectsMap
 	 *            the set of {@link Project}s.
@@ -66,11 +66,11 @@ public class Repl {
 	 */
 	public Repl(Map<Project, Project> executingProjectsRef,
 			ManagerBoard theManagerBoard,
-			List<Project> theCompletedProjectsList,
+			Set<Project> completedProjects,
 			Map<String, ProjectImpl> projectsMap, Warehouse aWarehouse) {
 		Repl.executingProjects = executingProjectsRef;
 		Repl.commands = new HashSet<String>();
-		Repl.completedProjectsList = theCompletedProjectsList;
+		Repl.completedProjectsSet = completedProjects;
 		Repl.projects = projectsMap;
 		Repl.warehouse = aWarehouse;
 		Repl.managerBoard = theManagerBoard;
@@ -208,7 +208,7 @@ public class Repl {
 		} else {
 			Manager manager = new Manager(vec.elementAt(0),
 					new ManagerSpecialization(vec.elementAt(1)),
-					Repl.managerBoard, Repl.completedProjectsList,
+					Repl.managerBoard, Repl.completedProjectsSet,
 					Repl.executingProjects);
 			manager.setLogger(Repl.logger);
 			manager.setWorkingBoard(Repl.workingBoard);
@@ -368,17 +368,21 @@ public class Repl {
 						+ " is not a valid project!");
 			} else {
 				ProjectImpl project = Repl.projects.get(vec.elementAt(0));
-				if (Repl.executingProjects.containsKey(project)) {
-					// someone is working on this project
-					Task task = project.getNextTask();
-					task.abortTask();
-					project.abortProject();
-					task.notifyAll();
-				} else { // the project is pending
-					Repl.managerBoard.getProjectBox(
-							project.getNextManagerSpecializtion()).getProject(
-							project);
-				}
+				Repl.logger.finer("trying to abort project " + project.getName()
+						+ " at " + Helpers.staticTimeNow());
+				if (!Repl.completedProjectsSet.contains(project)) {
+					// the project hasn't been completed yet.
+					if (Repl.executingProjects.containsKey(project)) {
+						// someone is working on this project
+						Task task = project.getNextTask();
+						project.abortProject();
+						task.abortTask();
+					} else { // the project is pending
+						Repl.managerBoard.getProjectBox(
+								project.getNextManagerSpecializtion())
+								.getProject(project);
+					}
+				} else {}
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);
@@ -390,7 +394,7 @@ public class Repl {
 					.println("USAGE: 'completedProjects' takes exactly 0 arguments. "
 							+ vec.size() + " given.");
 		} else {
-			for (Project project : Repl.completedProjectsList) {
+			for (Project project : Repl.completedProjectsSet) {
 				System.out.println("Project: " + project.getName() + ".\n"
 						+ "Hours worked: " + project.getTotalHours() + ".\n"
 						+ "Completed Tasks: "
@@ -439,7 +443,7 @@ public class Repl {
 						+ Repl.taskArr2Str(project.getCompletedTasks())
 						+ "\n"
 						+ "Current Task has "
-						+project.getNextTask().getHoursDone()
+						+ project.getNextTask().getHoursDone()
 						+ " hours done.\n"
 						+ "Current Workers are: "
 						+ Repl
