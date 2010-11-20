@@ -15,8 +15,6 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
-
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerSpecialization;
@@ -343,7 +341,7 @@ public class Repl {
 				for (Task t : completed) {
 					System.out.print(t.getName() + ": ");
 					System.out.println("\tpublisher: " + t.getManagerName());
-					System.out.println("\tworkers: ");
+					System.out.print("\tworkers: ");
 					for (Worker w : t.getWorkers()) {
 						System.out.print(w.getName() + " ");
 					}
@@ -351,7 +349,7 @@ public class Repl {
 					for (Resource r : t.getNeededResources()) {
 						System.out.print(r.getName() + " ");
 					}
-					System.out.println("\n\twork neede: " + t.getSize()
+					System.out.println("\n\twork needed: " + t.getSize()
 							+ " hours.");
 				}
 			}

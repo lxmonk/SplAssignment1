@@ -5,5 +5,6 @@
 bin/*
 # Ignore vim backup files
 *~
+*swp
 # Ignore log files
 *.log*

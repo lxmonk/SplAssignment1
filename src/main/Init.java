@@ -15,6 +15,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -58,12 +59,14 @@ public class Init {
 
 		/* create the logger */
 		Logger logger = Logger.getLogger("SplAssignment1.Logger");
+//		Logger logger = new Logg ("SplAssignment1.Logger");
 		Handler fh = null;
 		try {
 			fh = new FileHandler(args[2]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		logger.setUseParentHandlers(false);
 
 		// logger output is written to a file in fh handler
 		fh.setFormatter(new OurFormatter());
@@ -72,9 +75,13 @@ public class Init {
 		// Set the log level specifying which message levels will be logged by
 		// this logger
 		logger.setLevel(Level.INFO); // FIXME: update this.
+		java.util.logging.ConsoleHandler ch = new ConsoleHandler();
+		ch.setLevel(Level.OFF);
+		ch.setFormatter(new OurFormatter());
+		logger.addHandler(ch);
+
 		/* start the logger */
 		logger.fine("logger started.");
-
 		/* create the Boards */
 		ManagerBoard managerBoard = new ManagerBoardImpl();
 		logger.fine("ManagerBoardImpl created");
