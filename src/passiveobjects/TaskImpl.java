@@ -123,8 +123,7 @@ public class TaskImpl implements Task {
 	@Override
 	public void taskIsDone() {
 		this.complete=true;
-		// TODO Auto-generated method stub
-
+		this.notifyAll();
 	}
 
 	@Override
@@ -181,5 +180,15 @@ public class TaskImpl implements Task {
 	@Override
 	public boolean isAborted() {
 		return this.aborted;
+	}
+
+	@Override
+	public synchronized void monitorCompletion() throws InterruptedException {
+		this.wait();
+	}
+
+	@Override
+	public String getProjectName() {
+		return this.manager.getCurrentProject().getName(); 
 	}
 }

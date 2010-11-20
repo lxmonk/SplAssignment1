@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import passiveobjects.Helpers;
 import passiveobjects.Resource;
 import passiveobjects.Task;
 import passiveobjects.Warehouse;
@@ -18,10 +19,10 @@ import passiveobjects.WorkingBoard;
  * 
  */
 public class Worker implements Runnable {
-	
-	static final int SECOND = 1000; 
-	static final int SECOND_5 = 5000; 
-	
+
+	static final int SECOND = 1000;
+	static final int SECOND_10 = 10000;
+
 	final String name;
 	final int workHours;
 	final List<WorkerSpecialty> specialtyList;
@@ -30,6 +31,7 @@ public class Worker implements Runnable {
 	WorkingBoard workingBoard;
 	Warehouse warehouse;
 	boolean gotResources;
+	
 
 	/**
 	 * The worker's constructor
@@ -108,6 +110,19 @@ public class Worker implements Runnable {
 			return resourceList;
 		}
 	}
+	
+	/**
+	 * makes the worker wait the extra time, if the task is complete before is workHours are complete
+	 * @param time the number of hours he needs to wait
+	 */
+	public synchronized void workForNothing(int time) {
+		try {
+			this.wait(time * Worker.SECOND);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void run() {
@@ -115,21 +130,20 @@ public class Worker implements Runnable {
 			this.currentTask = null;
 			this.gotResources = false;
 			Task temp = null;
-			for (WorkerSpecialty workerSpecialty : this.specialtyList) { 
+			for (WorkerSpecialty workerSpecialty : this.specialtyList) {
 				// searching for a task
-				System.out.println(temp);
 				temp = this.workingBoard.getTaskBySpecialty(workerSpecialty);
 				if ((temp != null) && (temp.getHoursStillNeeded() > 0)
 						&& (!temp.isComplete()) && (!temp.isAborted())) {
 					this.currentTask = temp;
 					break; // we found a task , and it still needs hours, and
-						  // it's not completed or aborted
+							// it's not completed or aborted
 				}
 			}
 			if (this.currentTask != null) { // found a qualifies task to work on
 				try {
 					this.gotResources = this.warehouse
-							.getResources(this.currentTask); 
+							.getResources(this.currentTask,this.name);
 					// if resources are not available, the worker waits
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -139,31 +153,24 @@ public class Worker implements Runnable {
 						&& (!this.currentTask.isComplete())
 						&& (!this.currentTask.isAborted())) {
 					int shortShift = this.currentTask.signInWorker(this);
-					if (shortShift == 0)
+					if (shortShift == 0) {
+						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
+								this.currentTask.getProjectName()+ " for "+ this.workHours + " hours at "+ Helpers.staticTimeNow());
 						this.currentTask.work(this.workHours);
+					}
 					else {
+						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
+								this.currentTask.getProjectName()+ " for " + shortShift + " hours at "+ Helpers.staticTimeNow());
 						this.currentTask.work(shortShift);
-						try {
-							this.wait((this.workHours - shortShift) * Worker.SECOND); // TODO:
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-						}
+						this.workForNothing(this.workHours - shortShift);
 					}
 				}
 				if (this.gotResources) {
-					this.warehouse.returnResources(this.currentTask
-							.getNeededResources());
-					this.gotResources = false;
-				}
+					this.warehouse.returnResources(this.currentTask.getNeededResources(),this.name);
+					this.gotResources = false;				}
 			} else
-				try {
-					// wait till a new task will be posted on the workingBoard or 5 seconds
-					this.workingBoard.getNewMonitor().wait(Worker.SECOND_5); 
-				} catch (InterruptedException e) {
-					// TODO: change when we write the stop project
-					// TODO Auto-generated catch block
-				}
+				this.workingBoard.waitTillPostTask();
+			this.currentTask = null;
 		}
 	}
-
 }

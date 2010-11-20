@@ -71,7 +71,7 @@ public class Init {
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.INFO); // FIXME: update this.
+		logger.setLevel(Level.FINEST); // FIXME: update this.
 		/* start the logger */
 		logger.fine("logger started.");
 
@@ -79,7 +79,7 @@ public class Init {
 		ManagerBoard managerBoard = new ManagerBoardImpl();
 		logger.fine("ManagerBoardImpl created");
 		WorkingBoard workingBoard = new WorkingBoardImpl();
-		Warehouse warehouse = new WarehouseImpl();
+		Warehouse warehouse = new WarehouseImpl(logger);
 		List<Project> completedProjects = new Vector<Project>();
 		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 

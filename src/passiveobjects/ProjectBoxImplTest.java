@@ -42,9 +42,10 @@ public class ProjectBoxImplTest {
 	/**
 	 * Test method for
 	 * {@link passiveobjects.ProjectBoxImpl#addProject(passiveobjects.Project)}.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testAddProject() {
+	public void testAddProject() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		ManagerSpecialization managerSpecialization = projectBox
@@ -78,9 +79,10 @@ public class ProjectBoxImplTest {
 
 	/**
 	 * Test method for {@link passiveobjects.ProjectBoxImpl#getProject()}.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testGetProject() {
+	public void testGetProject() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		ManagerSpecialization managerSpecialization = projectBox
@@ -99,9 +101,10 @@ public class ProjectBoxImplTest {
 	 * Test method for
 	 * {@link passiveobjects.ProjectBoxImpl#removeProject(passiveobjects.Project)}
 	 * .
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testRemoveProject() {
+	public void testRemoveProject() throws InterruptedException {
 		String randStr = UUID.randomUUID().toString();
 		String randStr2 = UUID.randomUUID().toString();
 		ManagerSpecialization managerSpecialization = projectBox

@@ -41,11 +41,9 @@ public interface WorkingBoard {
 	public boolean findTask(Task task);
 	
 	/**
-	 * returns a monitor that all the workers that didn't find any
-	 * tasks, will be locked on it
+	 * makes the worker wait till a new task is posted on the WorkingBoard
 	 * 
-	 * @return a monitor
 	 */
-	public Object getNewMonitor();
+	public void waitTillPostTask();
 	
 }
