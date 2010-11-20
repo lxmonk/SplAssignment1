@@ -5,6 +5,7 @@ package passiveobjects;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
@@ -29,6 +30,7 @@ public class TaskImpl implements Task {
 	List<Worker> workers;
 	volatile boolean complete;
 	volatile boolean aborted;
+	Logger logger;
 
 	/**
 	 * a new task constructor
@@ -121,8 +123,9 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public void taskIsDone() {
+	public void taskIsDone(String workerName) {
 		this.complete=true;
+		this.logger.info(workerName+" completed task "+ this.name+ " of "+this.getProjectName()+" at "+ Helpers.staticTimeNow());
 		this.notifyAll();
 	}
 
@@ -161,21 +164,22 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized void work(int workHours) {
+	public synchronized void work(int workHours,String workerName) {
 		try {
 			this.wait(workHours*(TaskImpl.SECOND));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 		this.incrementHoursDone(workHours);
-		if ((this.hoursDone == this.size) && (!this.isAborted())) this.taskIsDone();  
+		if ((this.hoursDone == this.size) && (!this.isAborted())) this.taskIsDone(workerName);  
 	}
 
 	@Override
-	public void abortTask() {
+	public void abortTask(String workerName) {
 		this.aborted=true;
-		
+		this.logger.info(workerName+ " stops working on task "+ this.name+ " of project "+ this.getProjectName()+" at "+ Helpers.staticTimeNow());
 	}
+
 
 	@Override
 	public boolean isAborted() {
@@ -190,5 +194,10 @@ public class TaskImpl implements Task {
 	@Override
 	public String getProjectName() {
 		return this.manager.getCurrentProject().getName(); 
+	}
+
+	@Override
+	public void setLogger(Logger aLogger) {
+		this.logger=aLogger;
 	}
 }

@@ -156,12 +156,12 @@ public class Worker implements Runnable {
 					if (shortShift == 0) {
 						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
 								this.currentTask.getProjectName()+ " for "+ this.workHours + " hours at "+ Helpers.staticTimeNow());
-						this.currentTask.work(this.workHours);
+						this.currentTask.work(this.workHours,this.name);
 					}
 					else {
 						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
 								this.currentTask.getProjectName()+ " for " + shortShift + " hours at "+ Helpers.staticTimeNow());
-						this.currentTask.work(shortShift);
+						this.currentTask.work(shortShift,this.name);
 						this.workForNothing(this.workHours - shortShift);
 					}
 				}
