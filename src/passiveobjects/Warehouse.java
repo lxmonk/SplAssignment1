@@ -32,18 +32,20 @@ public interface Warehouse {
 	 *       warehouse.
 	 * @param task
 	 *            the task we need the resources for
+	 * @param workerName the worker's name (for the Logger)
 	 * @throws InterruptedException            
 	 * @return if we took the resources or not 
 	 */
-	public boolean getResources(Task task) throws InterruptedException ;
+	public boolean getResources(Task task,String workerName) throws InterruptedException ;
 
 	/**
 	 * @post the resources in resourceList are added back to the inventory in
 	 *       the warehouse.
 	 * @param resourceList
 	 *            list of resources to be returned.
+	 * @param workerName the worker's name (for the Logger)
 	 */
-	public void returnResources(List<Resource> resourceList);
+	public void returnResources(List<Resource> resourceList,String workerName);
 
 
 	/**
@@ -53,7 +55,6 @@ public interface Warehouse {
 	 * @pre none
 	 * @post the resource is added to the inventory in the warehouse, in the
 	 *       amount stated.
-	 * 
 	 * @param resource
 	 *            the resource.
 	 */

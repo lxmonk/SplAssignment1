@@ -80,13 +80,14 @@ public class Init {
 		ch.setFormatter(new OurFormatter());
 		logger.addHandler(ch);
 
+		logger.setLevel(Level.FINEST); // FIXME: update this.
 		/* start the logger */
 		logger.fine("logger started.");
 		/* create the Boards */
 		ManagerBoard managerBoard = new ManagerBoardImpl();
 		logger.fine("ManagerBoardImpl created");
 		WorkingBoard workingBoard = new WorkingBoardImpl();
-		Warehouse warehouse = new WarehouseImpl();
+		Warehouse warehouse = new WarehouseImpl(logger);
 		List<Project> completedProjects = new Vector<Project>();
 		Map<Project, Project> executingProjects = new ConcurrentHashMap<Project, Project>();
 

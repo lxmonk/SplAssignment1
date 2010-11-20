@@ -98,54 +98,76 @@ public interface Task {
 	public void taskIsDone();
 
 	/**
-	 * adds a worker to the list of workers who worked on the task
-	 * changes the hours still needed on the task according to the worker's workHours
+	 * adds a worker to the list of workers who worked on the task changes the
+	 * hours still needed on the task according to the worker's workHours
 	 * 
-	 * @param worker 
-	 * 				the new worker working on the task
-	 * @return if the worker will work a full shift return 0. else return the length of his short shift;
+	 * @param worker
+	 *            the new worker working on the task
+	 * @return if the worker will work a full shift return 0. else return the
+	 *         length of his short shift;
 	 */
 	public int signInWorker(Worker worker);
 
 	/**
 	 * update the number of hours done on this task.
 	 * 
-	 * @param hours the number of hours to the hours done on this task
+	 * @param hours
+	 *            the number of hours to the hours done on this task
 	 */
 	public void incrementHoursDone(int hours);
-	
+
 	/**
 	 * Decreases the number of hours the task still needs to be completed.
-	 * @param hours the number of hours to be decreased.
+	 * 
+	 * @param hours
+	 *            the number of hours to be decreased.
 	 */
 	public void decreaseHoursStillNeeded(int hours);
-	
+
 	/**
 	 * Sets the manager who published this task to the working board.
-	 * @param manager the {@link Manager} 
+	 * 
+	 * @param manager
+	 *            the {@link Manager}
 	 */
 	public void setManager(Manager manager);
-	
+
 	/**
 	 * returns the name of this {@link Task}.
+	 * 
 	 * @return the name of this {@link Task}
 	 */
 	public String getName();
-	
+
 	/**
-	 * simulates the work done on this task by a worker 
-	 * @param workHours the number of hours the worker will work
+	 * simulates the work done on this task by a worker
+	 * 
+	 * @param workHours
+	 *            the number of hours the worker will work
 	 */
 	public void work(int workHours);
-	
+
 	/**
 	 * abort working on this task
 	 */
 	public void abortTask();
-	
+
 	/**
 	 * return if this task is aborted
+	 * 
 	 * @return if this task is aborted
 	 */
 	public boolean isAborted();
+
+	/**
+	 * make the manager wait() until the task is done.
+	 * @throws InterruptedException
+	 */
+	public void monitorCompletion() throws InterruptedException;
+	
+	/**
+	 * returns the name of the project that the Task belong to
+	 * @return the name of the project that the Task belong to
+	 */
+	public String getProjectName();
 }

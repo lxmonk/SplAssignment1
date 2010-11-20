@@ -25,12 +25,13 @@ public class WorkerSpecialty {
 	public String getSpecialty() {
 		return this.specialty;
 	}
-	
-	/**
-	 * compares between obj and this {@link WorkerSpecialty}
-	 * @param obj the {@link WorkerSpecialty} to compare with
-	 * @return it the two WorkerSpecialties are the same or not 
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -40,13 +41,13 @@ public class WorkerSpecialty {
 			return false;
 		WorkerSpecialty other = (WorkerSpecialty) obj;
 		if (this.specialty == null) {
-			if (other.getSpecialty() != null)
+			if (other.specialty != null)
 				return false;
-		} else if (!this.getSpecialty().equals(other.getSpecialty()))
+		} else if (!this.specialty.equals(other.specialty))
 			return false;
 		return true;
-
-		
 	}
+	
+
 
 }

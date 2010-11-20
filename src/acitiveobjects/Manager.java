@@ -113,10 +113,12 @@ public class Manager implements Runnable {
 							+ currentTask.getName() + " of project "
 							+ this.currentProject.getName() + " at "
 							+ Helpers.staticTimeNow());
+					this.logger.fine("specialty needed: " + currentTask.getWorkerSpecialty());
 					if (!this.currentProject.isAborted()) {
 						this.workingBoard.postTask(currentTask, this);
 						// will wait until completion - according to postTask
 						// method.
+						currentTask.monitorCompletion();
 						this.workingBoard.removeTask(currentTask);
 					}
 					if (!this.currentProject.isAborted()) {
