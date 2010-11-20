@@ -47,7 +47,7 @@ import acitiveobjects.Worker;
  */
 public class Init {
 	
-	public static final int SECOND = 1000;
+	public static final int SECOND = 100;
 	public static final int SECOND_10 = 10000;
 	public static final int SECOND_15 = 15000;
 	/**
@@ -79,7 +79,7 @@ public class Init {
 		// this logger
 		logger.setLevel(Level.FINEST); // FIXME: update this.
 		java.util.logging.ConsoleHandler ch = new ConsoleHandler();
-		ch.setLevel(Level.FINEST);
+		ch.setLevel(Level.FINEST);		
 		ch.setFormatter(new OurFormatter());
 		logger.addHandler(ch);
 

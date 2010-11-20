@@ -114,7 +114,8 @@ public class Manager implements Runnable {
 							+ currentTask.getName() + " of project "
 							+ this.currentProject.getName() + " at "
 							+ Helpers.staticTimeNow());
-					this.logger.fine("specialty needed: " + currentTask.getWorkerSpecialty());
+					this.logger.fine("specialty needed: "
+							+ currentTask.getWorkerSpecialty());
 					if (!this.currentProject.isAborted()) {
 						this.workingBoard.postTask(currentTask, this);
 						// will wait until completion - according to postTask
@@ -155,14 +156,20 @@ public class Manager implements Runnable {
 					}
 				}
 				if (this.currentProject.isAborted()) {
-					this.logger.info(this.getName() + " stops working " +
-							"on project " + this.currentProject.getName() + " at" +
-							Helpers.staticTimeNow());
+					this.logger.info(this.getName() + " stops working "
+							+ "on project " + this.currentProject.getName()
+							+ " at" + Helpers.staticTimeNow());
+//					return;
 				}
 				this.currentProject = null;
 			}
+			this.logger.fine("Manager " + this.getName() + " was interrupted "
+					+ "at " + Helpers.staticTimeNow());
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
+			this.logger.fine("Manager " + this.getName()
+					+ " was interrupted (in catch block) at "
+					+ Helpers.staticTimeNow());
 		}
 	}
 

@@ -77,11 +77,7 @@ public class WarehouseImpl implements Warehouse {
 	@Override
 	public synchronized boolean getResources(Task task,String workerName)  throws InterruptedException {		
 		while(!this.resourcesAvailable(task.getNeededResources()) && (!task.isComplete()) && (!task.isAborted())) // didn't find resources && task not done
-			try {
-				this.wait(Init.SECOND_15); // the worker will always wake up after 15 seconds
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-			}
+			this.wait(Init.SECOND_15); // the worker will always wake up after 15 seconds
 		if (!task.isComplete() && !task.isAborted()) {
 			for (Resource resource : task.getNeededResources()) {
 				this.map.get(resource.getName()).decAmount();

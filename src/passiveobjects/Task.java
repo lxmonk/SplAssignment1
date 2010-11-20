@@ -147,8 +147,9 @@ public interface Task {
 	 * @param workHours
 	 *            the number of hours the worker will work
 	 * @param workerName the worker's name (for the Logger)
+	 * @throws InterruptedException 
 	 */
-	public void work(int workHours,String workerName);
+	public void work(int workHours,String workerName) throws InterruptedException;
 
 	/**
 	 * abort working on this task

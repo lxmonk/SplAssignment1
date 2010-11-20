@@ -22,8 +22,6 @@ import passiveobjects.WorkingBoard;
  */
 public class Worker implements Runnable {
 
-
-
 	final String name;
 	final int workHours;
 	final List<WorkerSpecialty> specialtyList;
@@ -32,7 +30,6 @@ public class Worker implements Runnable {
 	WorkingBoard workingBoard;
 	Warehouse warehouse;
 	boolean gotResources;
-	
 
 	/**
 	 * The worker's constructor
@@ -111,71 +108,91 @@ public class Worker implements Runnable {
 			return resourceList;
 		}
 	}
-	
+
 	/**
-	 * makes the worker wait the extra time, if the task is complete before is workHours are complete
-	 * @param time the number of hours he needs to wait
+	 * makes the worker wait the extra time, if the task is complete before is
+	 * workHours are complete
+	 * 
+	 * @param time
+	 *            the number of hours he needs to wait
 	 */
-	public synchronized void workForNothing(int time) {
-		try {
-			this.wait(time * Init.SECOND);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public synchronized void workForNothing(int time)
+	throws InterruptedException {
+		this.wait(time * Init.SECOND);
 	}
 
 	@Override
 	public void run() {
-		while (!Thread.interrupted()) {
-			this.currentTask = null;
-			this.gotResources = false;
-			Task temp = null;
-			for (WorkerSpecialty workerSpecialty : this.specialtyList) {
-				// searching for a task
-				temp = this.workingBoard.getTaskBySpecialty(workerSpecialty);
-				if ((temp != null) && (temp.getHoursStillNeeded() > 0)
-						&& (!temp.isComplete()) && (!temp.isAborted())) {
-					this.currentTask = temp;
-					break; // we found a task , and it still needs hours, and
-							// it's not completed or aborted
+		try {
+			while (!Thread.interrupted()) {
+				this.currentTask = null;
+				this.gotResources = false;
+				Task temp = null;
+				for (WorkerSpecialty workerSpecialty : this.specialtyList) {
+					// searching for a task
+					temp = this.workingBoard.getTaskBySpecialty(workerSpecialty);
+					if ((temp != null) && (temp.getHoursStillNeeded() > 0)
+							&& (!temp.isComplete()) && (!temp.isAborted())) {
+						this.currentTask = temp;
+						break;
+						// we found a task , and it still needs hours, and it's not
+						// completed or aborted
+					}
+					if (Thread.interrupted()) throw new InterruptedException(); 
+				}
+				if (this.currentTask != null) { // found a qualifies task to work on
+					this.gotResources = this.warehouse.getResources(
+							this.currentTask, this.name);
+					// if resources are not available, the worker waits
+					if (Thread.interrupted()) throw new InterruptedException();
+					while ((this.gotResources) 
+							&& (this.currentTask.getHoursStillNeeded() > 0)
+							&& (!this.currentTask.isComplete())
+							&& (!this.currentTask.isAborted())) {
+						int shortShift = this.currentTask.signInWorker(this);
+						if (Thread.interrupted()) throw new InterruptedException();
+						if (shortShift == 0) {
+							this.logger.info(this.name + " took task "
+									+ this.currentTask.getName() + " of project "
+									+ this.currentTask.getProjectName() + " for "
+									+ this.workHours + " hours at "
+									+ Helpers.staticTimeNow());
+							this.currentTask.work(this.workHours, this.name);
+						} else {
+							this.logger.info(this.name + " took task "
+									+ this.currentTask.getName() + " of project "
+									+ this.currentTask.getProjectName() + " for "
+									+ shortShift + " hours at "
+									+ Helpers.staticTimeNow());
+							this.currentTask.work(shortShift, this.name);
+							if (Thread.interrupted()) throw new InterruptedException();
+							this.workForNothing(this.workHours - shortShift);
+						}
+					}
+					if (this.currentTask.isAborted()) {
+						this.logger.info(this.name + " stops working on task "
+								+ this.currentTask.getName() + " of project "
+								+ this.currentTask.getProjectName() + " at "
+								+ Helpers.staticTimeNow());
+					}
+					if (Thread.interrupted()) throw new InterruptedException();
+					if (this.gotResources) {
+						this.warehouse.returnResources(this.currentTask
+								.getNeededResources(), this.name);
+						this.gotResources = false;
+					}
+				} else {
+					this.workingBoard.waitTillPostTask();
+					this.currentTask = null;
 				}
 			}
-			if (this.currentTask != null) { // found a qualifies task to work on
-				try {
-					this.gotResources = this.warehouse
-							.getResources(this.currentTask,this.name);
-					// if resources are not available, the worker waits
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-				}
-				while ((this.gotResources)
-						&& (this.currentTask.getHoursStillNeeded() > 0)
-						&& (!this.currentTask.isComplete())
-						&& (!this.currentTask.isAborted())) {
-					int shortShift = this.currentTask.signInWorker(this);
-					if (shortShift == 0) {
-						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
-								this.currentTask.getProjectName()+ " for "+ this.workHours + " hours at "+ Helpers.staticTimeNow());
-						this.currentTask.work(this.workHours,this.name);
-					}
-					else {
-						this.logger.info(this.name +" took task "+ this.currentTask.getName()+ " of project "+
-								this.currentTask.getProjectName()+ " for " + shortShift + " hours at "+ Helpers.staticTimeNow());
-						this.currentTask.work(shortShift,this.name);
-						this.workForNothing(this.workHours - shortShift);
-					}
-				}
-				if (this.currentTask.isAborted()) {
-						this.logger.info(this.name+ " stops working on task "+ this.currentTask.getName() +
-								" of project "+ this.currentTask.getProjectName()+" at "+ Helpers.staticTimeNow());
-				}
-				if (this.gotResources) {
-					this.warehouse.returnResources(this.currentTask.getNeededResources(),this.name);
-					this.gotResources = false;				}
-			} else
-				this.workingBoard.waitTillPostTask();
-			this.currentTask = null;
-		}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			this.logger.fine("Worker " + this.name
+					+ " was interrupted (in catch block) at "
+					+ Helpers.staticTimeNow());
+		}	
 	}
 }
+
+

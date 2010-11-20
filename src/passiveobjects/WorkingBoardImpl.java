@@ -83,7 +83,7 @@ public class WorkingBoardImpl implements WorkingBoard {
 					this.wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 	}
 

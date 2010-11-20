@@ -167,12 +167,8 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized void work(int workHours, String workerName) {
-		try {
-			this.wait(workHours * (Init.SECOND));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-		}
+	public synchronized void work(int workHours, String workerName) throws InterruptedException {
+		this.wait(workHours * (Init.SECOND));
 		this.incrementHoursDone(workHours);
 		if ((this.hoursDone == this.size) && (!this.isAborted()))
 			this.taskIsDone(workerName);
