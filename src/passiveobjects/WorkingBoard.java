@@ -10,6 +10,7 @@ public interface WorkingBoard {
 	 * @post the task is added to the WorkingBoard
 	 * @param task to be added to the WorkingBoard
 	 * @param manager the {@link Manager} who published the {@link Task}
+	 * @throws InterruptedException 
 	 */
 	public void postTask(Task task,Manager manager) throws InterruptedException;
 	

@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Resources;
-
 /**
  * @author lxmonk
  *
  */
 public class WarehouseImpl implements Warehouse {
 
+	static final int SECOND_15 = 15000;
+	
 	Map<String,Resource> map;
 	
 	/**
@@ -59,6 +59,7 @@ public class WarehouseImpl implements Warehouse {
 		for (Resource aResource : resourceList) {
 			this.map.get(aResource.getName()).incAmount();
 		}
+		this.notifyAll();
 	}
 	
 
@@ -69,7 +70,7 @@ public class WarehouseImpl implements Warehouse {
 	public synchronized boolean getResources(Task task)  throws InterruptedException {		
 		while(!this.resourcesAvailable(task.getNeededResources()) && (!task.isComplete()) && (!task.isAborted())) // didn't find resources && task not done
 			try {
-				this.wait(15000);
+				this.wait(WarehouseImpl.SECOND_15); // the worker will always wake up after 15 seconds
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 			}

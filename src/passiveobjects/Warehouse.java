@@ -32,6 +32,7 @@ public interface Warehouse {
 	 *       warehouse.
 	 * @param task
 	 *            the task we need the resources for
+	 * @throws InterruptedException            
 	 * @return if we took the resources or not 
 	 */
 	public boolean getResources(Task task) throws InterruptedException ;

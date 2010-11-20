@@ -54,11 +54,11 @@ public class WorkingBoardImpl implements WorkingBoard {
 		if (specialtyList == null) {
 			specialtyList = new ConcurrentLinkedQueue<Task>();
 			this.workingBoard.put(task.getWorkerSpecialty(),specialtyList);
-			System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
+//			System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
 		}
 		specialtyList.add(task);
-		System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
-//		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
+//		System.out.println(this.workingBoard.get(task.getWorkerSpecialty()));
+		this.newMonitor.notifyAll(); // wakes all the workers who didn't find tasks
 	}
 
 	/* (non-Javadoc)
@@ -80,8 +80,10 @@ public class WorkingBoardImpl implements WorkingBoard {
 	}
 
 	@Override
-	public synchronized Object getNewMonitor() {
-		return newMonitor;
+	public Object getNewMonitor() {
+		synchronized (this.newMonitor) {
+			return this.newMonitor;			
+		}
 	}
 
 }

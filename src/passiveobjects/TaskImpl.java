@@ -13,7 +13,10 @@ import acitiveobjects.Worker;
  * @author lxmonk
  * 
  */
+
 public class TaskImpl implements Task {
+
+	static final int SECOND = 1000;
 
 	final String name;
 	final ManagerSpecialization managerSpecialization;
@@ -161,12 +164,12 @@ public class TaskImpl implements Task {
 	@Override
 	public synchronized void work(int workHours) {
 		try {
-			this.wait(workHours*1000);
+			this.wait(workHours*(TaskImpl.SECOND));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 		}
 		this.incrementHoursDone(workHours);
-		if (this.hoursDone == this.size) this.taskIsDone();  
+		if ((this.hoursDone == this.size) && (!this.isAborted())) this.taskIsDone();  
 	}
 
 	@Override
