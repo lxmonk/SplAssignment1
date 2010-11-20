@@ -165,6 +165,10 @@ public class Worker implements Runnable {
 						this.workForNothing(this.workHours - shortShift);
 					}
 				}
+				if (this.currentTask.isAborted()) {
+						this.logger.info(this.name+ " stops working on task "+ this.currentTask.getName() +
+								" of project "+ this.currentTask.getProjectName()+" at "+ Helpers.staticTimeNow());
+				}
 				if (this.gotResources) {
 					this.warehouse.returnResources(this.currentTask.getNeededResources(),this.name);
 					this.gotResources = false;				}

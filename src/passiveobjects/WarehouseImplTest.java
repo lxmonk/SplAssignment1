@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +27,8 @@ public class WarehouseImplTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		warehouse = new WarehouseImpl();
+		Logger logger= Logger.getLogger("noLogger");
+		warehouse = new WarehouseImpl(logger);
 	}
 
 	/**
@@ -106,7 +108,7 @@ public class WarehouseImplTest {
 		List<Resource> resourceList = new ArrayList<Resource>();
 		resourceList.add(new Resource(randStr));
 		resourceList.add(new Resource(randStr + "2"));
-		warehouse.returnResources(resourceList);
+		warehouse.returnResources(resourceList,"Test");
 		assertEquals(randInt + 1, warehouse.queryResource(resource1));
 		assertEquals(randInt + 3, warehouse.queryResource(resource2));
 	}
@@ -130,7 +132,7 @@ public class WarehouseImplTest {
 		Task task = new TaskImpl(randStr + "8", new ManagerSpecialization(
 				randStr + "24"), new WorkerSpecialty(randStr + randStr),
 				randInt, resourceList);
-		warehouse.getResources(task);
+		warehouse.getResources(task,"Test");
 		assertEquals(randInt - 1, warehouse.queryResource(resource1));
 		assertEquals(randInt + 1, warehouse.queryResource(resource2));
 	}

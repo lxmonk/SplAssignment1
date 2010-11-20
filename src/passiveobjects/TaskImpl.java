@@ -175,9 +175,8 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public void abortTask(String workerName) {
+	public void abortTask() {
 		this.aborted=true;
-		this.logger.info(workerName+ " stops working on task "+ this.name+ " of project "+ this.getProjectName()+" at "+ Helpers.staticTimeNow());
 	}
 
 

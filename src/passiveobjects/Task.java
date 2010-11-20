@@ -152,9 +152,8 @@ public interface Task {
 
 	/**
 	 * abort working on this task
-	 * @param workerName the worker's name (for the Logger)
 	 */
-	public void abortTask(String workerName);
+	public void abortTask();
 
 	/**
 	 * return if this task is aborted
