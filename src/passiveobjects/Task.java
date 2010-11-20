@@ -4,6 +4,7 @@
 package passiveobjects;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
@@ -94,8 +95,9 @@ public interface Task {
 
 	/**
 	 * notify the manager that Task has been completed.
+	 * @param workerName the worker's name (for the Logger)
 	 */
-	public void taskIsDone();
+	public void taskIsDone(String workerName);
 
 	/**
 	 * adds a worker to the list of workers who worked on the task changes the
@@ -144,13 +146,15 @@ public interface Task {
 	 * 
 	 * @param workHours
 	 *            the number of hours the worker will work
+	 * @param workerName the worker's name (for the Logger)
 	 */
-	public void work(int workHours);
+	public void work(int workHours,String workerName);
 
 	/**
 	 * abort working on this task
+	 * @param workerName the worker's name (for the Logger)
 	 */
-	public void abortTask();
+	public void abortTask(String workerName);
 
 	/**
 	 * return if this task is aborted
@@ -170,4 +174,10 @@ public interface Task {
 	 * @return the name of the project that the Task belong to
 	 */
 	public String getProjectName();
+	
+	/**
+	 * sets the Logger
+	 * @param logger a Logger
+	 */
+	public void setLogger(Logger logger);
 }
