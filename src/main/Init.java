@@ -76,7 +76,7 @@ public class Init {
 		// this logger
 		logger.setLevel(Level.INFO); // FIXME: update this.
 		java.util.logging.ConsoleHandler ch = new ConsoleHandler();
-		ch.setLevel(Level.OFF);
+		ch.setLevel(Level.SEVERE);
 		ch.setFormatter(new OurFormatter());
 		logger.addHandler(ch);
 
