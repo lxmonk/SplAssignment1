@@ -4,9 +4,6 @@
     <property environment="env"/>
     <property name="HOME" value="."/>
     <property name="junit.output.dir" value="junit"/>
-    <!--<property name="debuglevel" value="source,lines,vars"/>-->
-    <!--<property name="target" value="1.6"/>
-    <property name="source" value="1.6"/>-->
     <path id="JUnit 4.libraryclasspath">
         <pathelement location="${HOME}/src/lib/junit.jar"/>
         <pathelement location="${HOME}/src/lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
@@ -28,8 +25,7 @@
         <delete dir="bin"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-project" name="build"/> <!--build-subprojects,-->
-<!--    <target name="build-subprojects"/>-->
+    <target depends="build-project" name="build"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac destdir="bin" source="1.6" target="1.6" nowarn="on"> 
@@ -45,11 +41,8 @@
             <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/jdt/plugins/org.junit4_4.5.0.201007231016/junit.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/sdk/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
         </jar>
-        
-    </target>
-   
-    <target description="compile project with compiler" name="build-eclipse-compiler"> <!--Eclipse-->
-        <!--<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>-->
+    </target>   
+    <target description="compile project with compiler" name="build-javac-compiler">     
         <antcall target="build"/>
     </target>
     <target name="Repl">
@@ -65,12 +58,6 @@
             <classpath refid="sim.classpath"/>
         </junit>
     </target>
-    <!--<target name="Init">
-        <java classname="main.Init" failonerror="true" fork="yes">
-            <arg line="configuration2.txt projects2.txt log.logN"/>
-            <classpath refid="sim.classpath"/>
-        </java>
-    </target>-->
     <target name="junitreport">
         <junitreport todir="${junit.output.dir}">
             <fileset dir="${junit.output.dir}">
@@ -79,16 +66,4 @@
             <report format="frames" todir="${junit.output.dir}"/>
         </junitreport>
     </target>
-    <!--<target name="create_run_jar">
-    	  <echo> "creating jar" </echo>
-        <jar destfile="./sim.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="main.Init"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <fileset dir="./src/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/jdt/plugins/org.junit4_4.5.0.201007231016/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/sdk/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-        </jar>
-    </target>-->
 </project>

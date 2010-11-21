@@ -256,11 +256,11 @@ public class Repl {
 				System.out.println("Current Project: " + projectName + ".");
 				Task curTask = currentProject.getNextTask();
 				System.out.println("Current Task Info: ");
-				System.out.println("\tworkers: ");
+				System.out.print("\tworkers: ");
 				for (Worker w : curTask.getWorkers()) {
 					System.out.print(w.getName() + " ");
 				}
-				System.out.println("\tAmount of work still needed: "
+				System.out.println("\n\tAmount of work still needed: "
 						+ curTask.getHoursStillNeeded() + " hours.");
 				System.out.println("\tTotal Work for this Task: "
 						+ curTask.getSize() + " hours.");
