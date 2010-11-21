@@ -168,7 +168,7 @@ public interface Task {
 	 * @throws InterruptedException
 	 */
 	public void monitorCompletion() throws InterruptedException;
-	
+
 	/**
 	 * returns the name of the project that the Task belong to
 	 * @return the name of the project that the Task belong to
