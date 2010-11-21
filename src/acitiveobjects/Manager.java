@@ -103,7 +103,7 @@ public class Manager implements Runnable {
 		this.projectBox = this.managerBoard.getProjectBox(this
 				.getSpecializtion());
 		try {
-			while (!Thread.interrupted()) {
+			while (!Thread.interrupted() && this.projectBox != null) {
 				this.currentProject = this.projectBox.getProject();
 				if (!this.currentProject.isAborted()) {
 					Task currentTask = this.currentProject.getNextTask();

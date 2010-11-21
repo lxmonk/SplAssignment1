@@ -15,6 +15,8 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
+import main.Init;
+
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerSpecialization;
@@ -65,8 +67,7 @@ public class Repl {
 	 *            a {@link Warehouse}.
 	 */
 	public Repl(Map<Project, Project> executingProjectsRef,
-			ManagerBoard theManagerBoard,
-			Set<Project> completedProjects,
+			ManagerBoard theManagerBoard, Set<Project> completedProjects,
 			Map<String, ProjectImpl> projectsMap, Warehouse aWarehouse) {
 		Repl.executingProjects = executingProjectsRef;
 		Repl.commands = new HashSet<String>();
@@ -91,6 +92,16 @@ public class Repl {
 	 */
 	public void setLogger(Logger aLogger) {
 		Repl.logger = aLogger;
+	}
+
+	/**
+	 * set the {@link WorkingBoard}.
+	 * 
+	 * @param theWorkingBoard
+	 *            the working board.
+	 */
+	public void setWorkingBoard(WorkingBoard theWorkingBoard) {
+		this.workingBoard = theWorkingBoard;
 	}
 
 	/**
@@ -169,6 +180,7 @@ public class Repl {
 				Repl.addDepartmentManager(Repl.vec(sc));
 			} else if (in.equals("stop")) {
 				Repl.stop();
+				System.exit(0);
 			} else if (in.equals("help")) {
 				Repl.help();
 			}
@@ -184,7 +196,7 @@ public class Repl {
 	private static void help() {
 		System.out.println("the available commands are:");
 		System.out.println("currentProjects, pendingProjects,"
-				+ "completedProjects, abortProject, project, workers,"
+				+ "completedProjects, abortProject, project, workers, "
 				+ "worker, addWorker, departmentManager,"
 				+ "addDepartmentManager, stop, help");
 
@@ -195,6 +207,8 @@ public class Repl {
 			Repl.logger.fine("stopping everythind");
 			Repl.workersExecutorService.shutdownNow();
 			Repl.managersExecutorService.shutdownNow();
+			Thread.sleep(Init.SECOND);
+			System.out.println("shutdown completed.");
 		} catch (Exception e) {
 			// do nothig!!
 		}
@@ -368,8 +382,8 @@ public class Repl {
 						+ " is not a valid project!");
 			} else {
 				ProjectImpl project = Repl.projects.get(vec.elementAt(0));
-				Repl.logger.finer("trying to abort project " + project.getName()
-						+ " at " + Helpers.staticTimeNow());
+				Repl.logger.finer("trying to abort project "
+						+ project.getName() + " at " + Helpers.staticTimeNow());
 				if (!Repl.completedProjectsSet.contains(project)) {
 					// the project hasn't been completed yet.
 					if (Repl.executingProjects.containsKey(project)) {
@@ -382,7 +396,8 @@ public class Repl {
 								project.getNextManagerSpecializtion())
 								.getProject(project);
 					}
-				} else {}
+				} else {
+				}
 			}
 		}
 		Repl.nextCommand(Repl.commands, Repl.SC);
