@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,10 +78,10 @@ public class Init {
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.FINEST); // FIXME: update this.
-		java.util.logging.ConsoleHandler ch = new ConsoleHandler();
-		ch.setLevel(Level.SEVERE);		
-		ch.setFormatter(new OurFormatter());
+		logger.setLevel(Level.INFO); // FIXME: update this.
+		ConsoleHandler ch = new ConsoleHandler();
+		ch.setLevel(Level.OFF);		
+//		ch.setFormatter(new OurFormatter());
 		logger.addHandler(ch);
 
 		logger.setLevel(Level.FINEST); // FIXME: update this.
