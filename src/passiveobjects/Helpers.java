@@ -40,6 +40,7 @@ public class Helpers {
 	 * 
 	 * @return a string of the current time, in HH:MM:SS format.
 	 */
+	@SuppressWarnings("deprecation")
 	public String timeNow() {
 		Date date = new Date();
 		return date.getHours() + ":" + date.getMinutes() + ":"

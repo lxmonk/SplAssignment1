@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import main.Init;
-
 import passiveobjects.Helpers;
 import passiveobjects.Resource;
 import passiveobjects.Task;

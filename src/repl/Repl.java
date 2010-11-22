@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import main.Init;
-
 import passiveobjects.Helpers;
 import passiveobjects.ManagerBoard;
 import passiveobjects.ManagerSpecialization;
@@ -101,7 +100,7 @@ public class Repl {
 	 *            the working board.
 	 */
 	public void setWorkingBoard(WorkingBoard theWorkingBoard) {
-		this.workingBoard = theWorkingBoard;
+		Repl.workingBoard = theWorkingBoard;
 	}
 
 	/**
@@ -210,7 +209,7 @@ public class Repl {
 			Thread.sleep(Init.SECOND);
 			System.out.println("shutdown completed.");
 		} catch (Exception e) {
-			// do nothig!!
+			System.exit(0);
 		}
 
 	}

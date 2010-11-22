@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import main.Init;
-
 import acitiveobjects.Manager;
 import acitiveobjects.Worker;
 

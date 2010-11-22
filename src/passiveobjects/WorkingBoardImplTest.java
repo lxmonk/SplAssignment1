@@ -3,7 +3,7 @@
  */
 package passiveobjects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,8 +11,6 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import acitiveobjects.Manager;
 
 /**
  * @author lxmonk

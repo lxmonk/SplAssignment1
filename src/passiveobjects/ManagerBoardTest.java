@@ -5,6 +5,10 @@ package passiveobjects;
 
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +48,7 @@ public class ManagerBoardTest {
 	/**
 	 * Test method for
 	 * {@link passiveobjects.ManagerBoard#getProjectBox(passiveobjects.ManagerSpecializtion)}
-	 * .
+	 * . Implemented in ManagerBoardImplTest
 	 */
 	@Test
 	public void testGetProjectBox() {
@@ -52,8 +56,8 @@ public class ManagerBoardTest {
 //		Map<ManagerSpecializtion, ProjectBox> map = new HashMap<ManagerSpecializtion, ProjectBox>();
 		
 //		managerBoard.createProjectsMap(map);
-
-		fail("Not yet implemented"); // TODO
+		
+//		fail("Not yet implemented"); // TODO
 	}
 
 }

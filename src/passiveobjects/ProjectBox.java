@@ -1,7 +1,6 @@
 package passiveobjects;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 public interface ProjectBox {
 

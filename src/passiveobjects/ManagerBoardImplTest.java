@@ -2,9 +2,6 @@ package passiveobjects;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +14,7 @@ public class ManagerBoardImplTest {
 	ManagerBoard managerBoard;
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception by default.
 	 */
 	@Before
 	public void setUp() throws Exception {
