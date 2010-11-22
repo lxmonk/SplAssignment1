@@ -114,9 +114,9 @@ public class Worker implements Runnable {
 	 * 
 	 * @param time
 	 *            the number of hours he needs to wait
+	 * @throws InterruptedException when it is stopped           
 	 */
-	public synchronized void workForNothing(int time)
-	throws InterruptedException {
+	public synchronized void workForNothing(int time) throws InterruptedException {
 		this.wait(time * Init.SECOND);
 	}
 

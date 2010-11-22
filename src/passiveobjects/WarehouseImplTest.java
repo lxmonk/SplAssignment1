@@ -28,7 +28,7 @@ public class WarehouseImplTest {
 	@Before
 	public void setUp() throws Exception {
 		Logger logger= Logger.getLogger("noLogger");
-		warehouse = new WarehouseImpl(logger);
+		this.warehouse = new WarehouseImpl(logger);
 	}
 
 	/**
@@ -47,9 +47,9 @@ public class WarehouseImplTest {
 	public void testAddResource() {
 		int rand = (int) Math.round(Math.random() * 100);
 		Resource hammer = new Resource("Hammer", rand);
-		int amountBefore = warehouse.queryResource(hammer);
-		warehouse.addResource(hammer);
-		int amountAfter = warehouse.queryResource(hammer);
+		int amountBefore = this.warehouse.queryResource(hammer);
+		this.warehouse.addResource(hammer);
+		int amountAfter = this.warehouse.queryResource(hammer);
 		assertEquals(amountBefore + rand, amountAfter);
 	}
 
@@ -74,7 +74,7 @@ public class WarehouseImplTest {
 		Resource resource1 = new Resource(randStr, randInt);
 		Resource resource2 = new Resource(randStr + "2", randInt + 2);
 		// resources to make the method fail:
-		Resource resource3 = new Resource(randStr, randInt + 3);
+		Resource resource3 = new Resource(randStr+ "NOT_EXISTANT", randInt + 3);
 		Resource resource4 = new Resource(randStr + "NOT_EXISTANT", randInt + 2);
 		List<Resource> resourseList = new ArrayList<Resource>();
 		List<Resource> failedresourseList1 = new ArrayList<Resource>();
