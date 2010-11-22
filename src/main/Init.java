@@ -46,10 +46,11 @@ import acitiveobjects.Worker;
  * 
  */
 public class Init {
-	
+
 	public static final int SECOND = 1000;
 	public static final int SECOND_10 = 10000;
 	public static final int SECOND_15 = 15000;
+
 	/**
 	 * String arrays are used only where creating them is easier than populating
 	 * a Vector<String>, in single-threaded mode only, they are never altered
@@ -62,7 +63,7 @@ public class Init {
 
 		/* create the logger */
 		Logger logger = Logger.getLogger("SplAssignment1.Logger");
-//		Logger logger = new Logg ("SplAssignment1.Logger");
+		// Logger logger = new Logg ("SplAssignment1.Logger");
 		Handler fh = null;
 		try {
 			fh = new FileHandler(args[2]);
@@ -77,13 +78,11 @@ public class Init {
 
 		// Set the log level specifying which message levels will be logged by
 		// this logger
-		logger.setLevel(Level.INFO); // FIXME: update this.
+		logger.setLevel(Level.INFO);
 		ConsoleHandler ch = new ConsoleHandler();
-		ch.setLevel(Level.OFF);		
-//		ch.setFormatter(new OurFormatter());
+		ch.setLevel(Level.OFF);
 		logger.addHandler(ch);
 
-		logger.setLevel(Level.FINEST); // FIXME: update this.
 		/* start the logger */
 		logger.fine("logger started.");
 		/* create the Boards */
@@ -117,10 +116,6 @@ public class Init {
 
 		/* prepare to create the ProjectBoxes */
 		logger.fine("creating Project Boxes");
-		// int numOfManagerSpecializations = Integer.parseInt(configTxt
-		// .getProperty("numOfManagerSpecialities")); // Redundant??
-		// int numOfWorkerSpecialties = Integer.parseInt(configTxt
-		// .getProperty("numOfWorkerSpeciality")); // Redundant??
 		String[] specializations = Init.parseStrArr(configTxt,
 				"ManagerSpecialties");
 		String[] specialties = Init.parseStrArr(configTxt, "workerSpecialties");
@@ -255,7 +250,7 @@ public class Init {
 
 		observer.start();
 
-	}
+	} // main
 
 	private static String[] parseStrArr(Properties configTxt, String string) {
 		return configTxt.getProperty("ManagerSpecialties").replaceAll(" ", "")

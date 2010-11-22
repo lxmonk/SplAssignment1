@@ -194,16 +194,16 @@ public class Repl {
 
 	private static void help() {
 		System.out.println("the available commands are:");
-		System.out.println("currentProjects, pendingProjects,"
+		System.out.println("currentProjects, pendingProjects, "
 				+ "completedProjects, abortProject, project, workers, "
-				+ "worker, addWorker, departmentManager,"
+				+ "worker, addWorker, departmentManager, "
 				+ "addDepartmentManager, stop, help");
 
 	}
 
 	private static void stop() {
 		try {
-			Repl.logger.fine("stopping everythind");
+			Repl.logger.fine("stopping everything");
 			Repl.workersExecutorService.shutdownNow();
 			Repl.managersExecutorService.shutdownNow();
 			Thread.sleep(Init.SECOND);
