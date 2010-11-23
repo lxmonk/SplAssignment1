@@ -38,8 +38,8 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="./bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/jdt/plugins/org.junit4_4.5.0.201007231016/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/lib64/eclipse/dropins/sdk/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${HOME}/src/lib/junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${HOME}/src/lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
         </jar>
     </target>   
     <target description="compile project with compiler" name="build-javac-compiler">     

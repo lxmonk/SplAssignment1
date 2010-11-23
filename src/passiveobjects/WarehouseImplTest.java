@@ -74,7 +74,7 @@ public class WarehouseImplTest {
 		Resource resource1 = new Resource(randStr, randInt);
 		Resource resource2 = new Resource(randStr + "2", randInt + 2);
 		// resources to make the method fail:
-		Resource resource3 = new Resource(randStr+ "NOT_EXISTANT", randInt + 3);
+		Resource resource3 = new Resource(randStr+ "NOT_EXISTANT1", 0);
 		Resource resource4 = new Resource(randStr + "NOT_EXISTANT", randInt + 2);
 		List<Resource> resourseList = new ArrayList<Resource>();
 		List<Resource> failedresourseList1 = new ArrayList<Resource>();
