@@ -95,7 +95,9 @@ public interface Task {
 
 	/**
 	 * notify the manager that Task has been completed.
-	 * @param workerName the worker's name (for the Logger)
+	 * 
+	 * @param workerName
+	 *            the worker's name (for the Logger)
 	 */
 	public void taskIsDone(String workerName);
 
@@ -146,10 +148,12 @@ public interface Task {
 	 * 
 	 * @param workHours
 	 *            the number of hours the worker will work
-	 * @param workerName the worker's name (for the Logger)
-	 * @throws InterruptedException 
+	 * @param workerName
+	 *            the worker's name (for the Logger)
+	 * @throws InterruptedException
 	 */
-	public void work(int workHours,String workerName) throws InterruptedException;
+	public void work(int workHours, String workerName)
+			throws InterruptedException;
 
 	/**
 	 * abort working on this task
@@ -165,19 +169,23 @@ public interface Task {
 
 	/**
 	 * make the manager wait() until the task is done.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
+	 *             when a stop command is given.
 	 */
 	public void monitorCompletion() throws InterruptedException;
 
 	/**
 	 * returns the name of the project that the Task belong to
+	 * 
 	 * @return the name of the project that the Task belong to
 	 */
 	public String getProjectName();
-	
+
 	/**
 	 * sets the Logger
-	 * @param logger a Logger
+	 * 
+	 * @param logger
+	 *            a Logger
 	 */
 	public void setLogger(Logger logger);
 }
