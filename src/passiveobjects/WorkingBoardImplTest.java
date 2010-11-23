@@ -98,12 +98,12 @@ public class WorkingBoardImplTest {
 				randStr2);
 		int size = (int) Math.round(Math.random() * 100) + 1;
 		List<Resource> resources = null;
-		Task task = new TaskImpl(randStr+"999", managerSpecialization, workerSpecialty, size,
+		Task task = new TaskImpl(randStr2+"jj", managerSpecialization, workerSpecialty, size,
 				resources);
 		workingBoard.postTask(task,null);
-		assertEquals(task, workingBoard.findTask(task));
+		assertEquals(true, workingBoard.findTask(task));
 		workingBoard.removeTask(task);
-		assertEquals(null, workingBoard.findTask(task));
+		assertEquals(false, workingBoard.findTask(task));
 	}
 
 }
