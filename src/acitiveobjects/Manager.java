@@ -105,7 +105,8 @@ public class Manager implements Runnable {
 		try {
 			while (!Thread.interrupted() && this.projectBox != null) {
 				this.currentProject = this.projectBox.getProject();
-				if (!this.currentProject.isAborted()) {
+				if (!Thread.interrupted() && this.currentProject != null
+						&& !this.currentProject.isAborted()) {
 					Task currentTask = this.currentProject.getNextTask();
 					this.currentProject.setManager(this);
 					this.executingProjects.put(this.currentProject,
@@ -116,21 +117,24 @@ public class Manager implements Runnable {
 							+ Helpers.staticTimeNow());
 					this.logger.fine("specialty needed: "
 							+ currentTask.getWorkerSpecialty());
-					if (!this.currentProject.isAborted()) {
+					if (this.currentProject != null
+							&& !this.currentProject.isAborted()) {
 						this.workingBoard.postTask(currentTask, this);
-						// will wait until completion - according to postTask
-						// method.
+						// waiting in monitorCompletion
 						currentTask.monitorCompletion();
 						this.workingBoard.removeTask(currentTask);
 					}
-					if (!this.currentProject.isAborted()) {
+					if (!Thread.interrupted()) break;
+					if (this.currentProject != null
+							&& !this.currentProject.isAborted()) {
 						this.logger.info(this.name + " completed task "
 								+ currentTask.getName() + " of project "
 								+ this.currentProject.getName() + " at "
 								+ Helpers.staticTimeNow());
 					}
 					this.executingProjects.remove(this.currentProject);
-					if (!this.currentProject.isAborted()) {
+					if (this.currentProject != null
+							&& !this.currentProject.isAborted()) {
 						this.currentProject.removeTask(currentTask);
 						this.currentProject.updateTotalHours(currentTask
 								.getSize());
@@ -146,7 +150,8 @@ public class Manager implements Runnable {
 						} else { // the project is not done yet
 							nextManagerSpecialization = nextTask
 									.getManagerSpecializtion();
-							if (!this.currentProject.isAborted()) {
+							if (this.currentProject != null
+									&& !this.currentProject.isAborted()) {
 								ProjectBox retrunProjectBox = this.managerBoard
 										.getProjectBox(nextManagerSpecialization);
 								retrunProjectBox
@@ -155,11 +160,12 @@ public class Manager implements Runnable {
 						}
 					}
 				}
-				if (this.currentProject.isAborted()) {
+				if (!Thread.interrupted() && this.currentProject != null
+						&& this.currentProject.isAborted()) {
 					this.logger.info(this.getName() + " stops working "
 							+ "on project " + this.currentProject.getName()
 							+ " at" + Helpers.staticTimeNow());
-//					return;
+					// return;
 				}
 				this.currentProject = null;
 			}

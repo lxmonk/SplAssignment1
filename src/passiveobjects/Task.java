@@ -151,6 +151,7 @@ public interface Task {
 	 * @param workerName
 	 *            the worker's name (for the Logger)
 	 * @throws InterruptedException
+	 *             according to specs.
 	 */
 	public void work(int workHours, String workerName)
 			throws InterruptedException;
@@ -173,7 +174,7 @@ public interface Task {
 	 * @throws InterruptedException
 	 *             when a stop command is given.
 	 */
-	public void monitorCompletion() throws InterruptedException;
+	public void monitorCompletion() /*throws InterruptedException*/;
 
 	/**
 	 * returns the name of the project that the Task belong to

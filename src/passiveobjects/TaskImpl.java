@@ -185,8 +185,12 @@ public class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized void monitorCompletion() throws InterruptedException {
-		this.wait();
+	public synchronized void monitorCompletion()/* throws InterruptedException*/ {
+		try {
+			this.wait();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	@Override
