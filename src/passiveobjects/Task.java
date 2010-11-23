@@ -171,8 +171,7 @@ public interface Task {
 	/**
 	 * make the manager wait() until the task is done.
 	 * 
-	 * @throws InterruptedException
-	 *             when a stop command is given.
+	 * 
 	 */
 	public void monitorCompletion() /*throws InterruptedException*/;
 
